@@ -17,6 +17,8 @@ public class DBUtil {
         //连接MySql数据库
 //        String url="jdbc:mysql://;
 //        String driver="com.mysql.jdbc.Driver";
+
+        // for JDK11
         String connectionUrl =
                 "jdbc:sqlserver://localhost:1433;"
                         + "database=HDIMS;"
