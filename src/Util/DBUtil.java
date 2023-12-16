@@ -20,7 +20,7 @@ public class DBUtil {
 
         // for JDK11
         String connectionUrl =
-                "jdbc:sqlserver://localhost:1433;"
+                "jdbc:sqlserver://frp-dry.top:63011;"
                         + "database=HDIMS;"
                         + "user=LDSR;"
                         + "password=admin123ldsr;"
