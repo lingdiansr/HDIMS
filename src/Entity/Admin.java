@@ -24,6 +24,7 @@ public class Admin {
         return Aname;
     }
 
+
     public void setAname(String Aname) {
         this.Aname = Aname;
     }
