@@ -20,10 +20,10 @@ public class DBUtil {
 
         // for JDK11
         String connectionUrl =
-                "jdbc:sqlserver://frp-dry.top:63011;"
+                "jdbc:sqlserver://lingdianshiren.xyz:1433;"
                         + "database=HDIMS;"
-                        + "user=LDSR;"
-                        + "password=admin123ldsr;"
+                        + "user=HDIMS_admin;"
+                        + "password=hdims123;"
                         + "encrypt=true;"
                         + "trustServerCertificate=true;"
                         + "loginTimeout=30;";
