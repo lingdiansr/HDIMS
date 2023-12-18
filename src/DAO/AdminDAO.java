@@ -13,7 +13,7 @@ public class AdminDAO {
             String sql = "UPDATE Admin SET Aname = ?, Asex = ?, Aage = ?, Apwd = ? WHERE Ano = ?";
 
             // 创建 PreparedStatement 对象
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 // 设置参数
                 preparedStatement.setString(1, admin.getAname());
                 preparedStatement.setBoolean(2, admin.getAsex());
@@ -25,11 +25,13 @@ public class AdminDAO {
                 int rowsAffected = preparedStatement.executeUpdate();
 //                System.out.println("Rows affected: " + rowsAffected);
                 return true;
-            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
-
+    public static boolean updateApwdByAname(String name,String pwd){
+        return false;
+    }
 }
