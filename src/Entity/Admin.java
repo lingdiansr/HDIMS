@@ -12,10 +12,16 @@ public class Admin {
     public int Aage;
     private String Apwd;
 
+    /**
+     * @return
+     */
     public String getAno() {
         return Ano;
     }
 
+    /**
+     * @param Ano
+     */
     public void setAno(String Ano) {
         this.Ano = Ano;
     }
