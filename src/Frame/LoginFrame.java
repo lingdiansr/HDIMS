@@ -1,11 +1,10 @@
 package Frame;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 public class LoginFrame extends JFrame{
   //  JFrame LoginFrame = new JFrame();
     //三个标签：身份选择，用户名，密码
-      JLabel IdentityLable = new JLabel("身份");
+    JLabel IdentityLable = new JLabel("身份");
 //    JTextField IdentityField = new JTextField();
     JComboBox<String> IdentityCombox = new JComboBox<>();
     JLabel  UsernameLable= new JLabel("用户名");
@@ -44,7 +43,7 @@ public class LoginFrame extends JFrame{
         PasswordField.setColumns(20);
 
         IdentityPannel.add(IdentityLable);
-       IdentityPannel.add(IdentityCombox);
+        IdentityPannel.add(IdentityCombox);
 
         UsernamePannel.add(UsernameLable);
         UsernamePannel.add(UsernameField);
