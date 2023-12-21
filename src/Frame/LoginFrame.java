@@ -1,37 +1,32 @@
 package Frame;
 import javax.swing.*;
 import java.awt.*;
-public class LoginFrame extends JFrame{
-  //  JFrame LoginFrame = new JFrame();
-    //Èı¸ö±êÇ©£ºÉí·İÑ¡Ôñ£¬ÓÃ»§Ãû£¬ÃÜÂë
-    JLabel IdentityLable = new JLabel("Éí·İ");
-//    JTextField IdentityField = new JTextField();
+public class LoginFrame extends JFrame {
+
+    //ä¸‰ä¸ªæ ‡ç­¾ï¼šèº«ä»½é€‰æ‹©ï¼Œç”¨æˆ·åï¼Œå¯†ç 
+    JLabel IdentityLable = new JLabel("èº«ä»½");
+
     JComboBox<String> IdentityCombox = new JComboBox<>();
-    JLabel  UsernameLable= new JLabel("ÓÃ»§Ãû");
+    JLabel  UsernameLable= new JLabel("ç”¨æˆ·å");
     JTextField UsernameField = new JTextField();
-    JLabel  PasswordLable= new JLabel("ÃÜÂë");
+    JLabel  PasswordLable= new JLabel("å¯†ç ");
     JTextField PasswordField = new JTextField();
-    //ÒÔÏÂÊÇÁ½¸ö°´Å¥£ºÈ·¶¨£¬È¡Ïû
-    JButton SureButton = new JButton("È·¶¨");
-    JButton CancelButton =new JButton("È¡Ïû");
-    //ÒÔÏÂÊÇ¼¸¸öÖĞ¼äÈİÆ÷
+    //ä»¥ä¸‹æ˜¯ä¸¤ä¸ªæŒ‰é’®ï¼šç¡®å®šï¼Œå–æ¶ˆ
+    JButton SureButton = new JButton("ç¡®å®š");
+    JButton CancelButton =new JButton("å–æ¶ˆ");
+    //ä»¥ä¸‹æ˜¯å‡ ä¸ªä¸­é—´å®¹å™¨
     JPanel IdentityPannel = new JPanel();
     JPanel UsernamePannel = new JPanel();
     JPanel PasswordPannel = new JPanel();
     JPanel ButtonPannel = new JPanel();
     public LoginFrame(){
-//        LoginFrame.setTitle("Ò©Îï¹ÜÀíÏµÍ³µÇÂ¼½çÃæ");
-//        LoginFrame.setSize(800, 600);
-//        LoginFrame.setLayout(new GridLayout(6, 1));
-//        LoginFrame.setLocationRelativeTo(null);
-//        LoginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        LoginFrame.setVisible(true);
-        IdentityCombox.addItem("»¼Õß");
-        IdentityCombox.addItem("Ò½Éú");
-        IdentityCombox.addItem("»¤Ê¿");
-        IdentityCombox.addItem("²Ö¿â¹ÜÀíÔ±");
 
-        this.setTitle("Ò©Îï¹ÜÀíÏµÍ³µÇÂ¼½çÃæ");
+        IdentityCombox.addItem("æ‚£è€…");
+        IdentityCombox.addItem("åŒ»ç”Ÿ");
+        IdentityCombox.addItem("æŠ¤å£«");
+        IdentityCombox.addItem("ä»“åº“ç®¡ç†å‘˜");
+
+        this.setTitle("è¯ç‰©ç®¡ç†ç³»ç»Ÿç™»å½•ç•Œé¢");
         this.setSize(800, 600);
         this.setLayout(new GridLayout(6, 1));
         this.setLocationRelativeTo(null);
