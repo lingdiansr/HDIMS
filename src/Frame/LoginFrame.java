@@ -1,7 +1,12 @@
 package Frame;
 import javax.swing.*;
 import java.awt.*;
-public class LoginFrame extends JFrame {
+import java.awt.event.*;
+
+//任务一：还有一个进度条没实现JProgressbar
+//任务二：想加入一个背景图片书上262页似乎可以实现
+//任务三：监听器由于其他界面没实现，只有模子
+public class LoginFrame extends JFrame implements ActionListener {
 
     //三个标签：身份选择，用户名，密码
     JLabel IdentityLable = new JLabel("身份");
@@ -56,10 +61,35 @@ public class LoginFrame extends JFrame {
         this.add(ButtonPannel);
         this.add(new JPanel());
 
-
+        SureButton.addActionListener(this);
+        CancelButton.addActionListener(this);
+        IdentityCombox.addActionListener(this);
     }
 
-    public static void main(String s[]) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String selectedValue = null;
+        if (e.getSource() == SureButton) {
+            //打开另一个界面
+            //有三个打开哪个,再做一次判断
+            selectedValue = (String) IdentityCombox.getSelectedItem();
+            if (selectedValue.equals("患者")) {
+                JOptionPane.showMessageDialog(null, "你打开了患者界面（目前没实现）");
+            }
+            //打开患者窗口
+            else if (selectedValue.equals("医生")) {
+                System.out.println("Selected Option 2");
+            } else if (selectedValue.equals("护士")) {
+                System.out.println("Selected Option 3");
+            } else if (selectedValue.equals("仓库管理员")) {
+                System.out.println("Selected Option 4");
+            }
+        } else if (e.getSource() == CancelButton) {//点取消退出系统
+            System.exit(0);
+        }
+    }
+
+    public static void main(String[] s) {
         LoginFrame frame = new LoginFrame();
         frame.setVisible(true);
     }
