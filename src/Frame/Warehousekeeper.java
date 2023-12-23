@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 //任务一：按钮没调整好大小，左右很空
 //任务一：工具条的高度没调整好，上下很空
 //任务三：按钮对应的表格没实现响应
-//任务四：表格边上的面板还没实现
+//任务四：表格边上的滚动还没实现
 public class Warehousekeeper extends JFrame {
 
     //供应商工具条
@@ -108,3 +108,4 @@ public class Warehousekeeper extends JFrame {
         frame.setVisible(true);
     }
 }
+
