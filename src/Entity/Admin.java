@@ -12,6 +12,28 @@ public class Admin {
     public int Aage;
     private String Apwd;
 
+    public Admin() {
+    }
+
+    public Admin(String ano, String aname, boolean asex, int aage, String apwd) {
+        Ano = ano;
+        Aname = aname;
+        Asex = asex;
+        Aage = aage;
+        Apwd = apwd;
+    }
+
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "Ano='" + Ano + '\'' +
+                ", Aname='" + Aname + '\'' +
+                ", Asex=" + Asex +
+                ", Aage=" + Aage +
+                ", Apwd='" + Apwd + '\'' +
+                '}';
+    }
+
     /**
      * @return
      */
