@@ -4,17 +4,25 @@ import Entity.Supplier;
 import Util.DBUtil;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class SupplierDAO {
-    public boolean insertSupplier(String Sno, String Sname, String Saddr, String Sphone) {
+    public static boolean insertSupplier(Supplier supplier) {
         try {
+            // Establish a connection
             Connection connection = DBUtil.getConnection();
-            Statement statement = connection.createStatement();
-            String query = "INSERT INTO Supplier (Sno, Sname, Saddr, Sphone) VALUES ('" + Sno + "', '" + Sname + "', '" + Saddr + "', '" + Sphone + "')";
-            int rowsAffected = statement.executeUpdate(query);
-            statement.close();
+
+            // Create a prepared statement
+            String query = "INSERT INTO Supplier (Sno, Sname, Saddr, Sphone) VALUES (?, ?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, supplier.Sno);
+            preparedStatement.setString(2, supplier.Sname);
+            preparedStatement.setString(3, supplier.Saddr);
+            preparedStatement.setString(4, supplier.Sphone);
+            int rowsAffected = preparedStatement.executeUpdate();
+            preparedStatement.close();
             connection.close();
             return rowsAffected > 0;
         } catch (Exception e) {
@@ -23,7 +31,7 @@ public class SupplierDAO {
         }
     }
 
-    public boolean updateSupplier(String Sno, String Sname, String Saddr, String Sphone) {
+    public static boolean updateSupplier(String Sno, String Sname, String Saddr, String Sphone) {
         try {
             Connection connection = DBUtil.getConnection();
             Statement statement = connection.createStatement();
@@ -38,7 +46,7 @@ public class SupplierDAO {
         }
     }
 
-    public boolean deleteSupplier(String Sno) {
+    public static boolean deleteSupplier(String Sno) {
         try {
             Connection connection = DBUtil.getConnection();
             Statement statement = connection.createStatement();
@@ -53,33 +61,59 @@ public class SupplierDAO {
         }
     }
 
-    public Supplier[] getAllSuppliers() {
+    public static Supplier[] getAllSuppliers() {
         Supplier[] suppliers = null;
         try {
+            // 建立连接
             Connection connection = DBUtil.getConnection();
-            Statement statement = connection.createStatement();
-            String query = "SELECT * FROM Supplier";
-            ResultSet resultSet = statement.executeQuery(query);
-            resultSet.last();
-            int rowCount = resultSet.getRow();
-            resultSet.beforeFirst();
-            suppliers = new Supplier[rowCount];
-            int index = 0;
-            while (resultSet.next()) {
-                Supplier supplier = new Supplier();
-                supplier.Sno = resultSet.getString("Sno");
-                supplier.Sname = resultSet.getString("Sname");
-                supplier.Saddr = resultSet.getString("Saddr");
-                supplier.Sphone = resultSet.getString("Sphone");
-                suppliers[index] = supplier;
-                index++;
+
+            // 创建一个具有可滚动结果集的语句
+            Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            // 执行查询语句
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Supplier");
+
+            // 获取结果集中的行数
+            if (resultSet.last()) {
+                int rowCount = resultSet.getRow();
+                resultSet.beforeFirst();
+
+                // 创建一个Supplier数组
+                suppliers = new Supplier[rowCount];
+                int index = 0;
+
+                // 遍历结果集并填充数组
+                while (resultSet.next()) {
+                    Supplier supplier = new Supplier();
+                    supplier.Sno = resultSet.getString("Sno");
+                    supplier.Sname = resultSet.getString("Sname");
+                    supplier.Saddr = resultSet.getString("Saddr");
+                    supplier.Sphone = resultSet.getString("Sphone");
+                    suppliers[index] = supplier;
+                    index++;
+                }
             }
+
+            // 关闭连接
             resultSet.close();
             statement.close();
             connection.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return suppliers;
+    }
+
+    public static void main(String[] args) {
+        Supplier s =new Supplier("0001","huadun","shnaghai","88888");
+        Supplier s2 =new Supplier("0002","hhhh","shnaghai","88888");
+        System.out.println(SupplierDAO.insertSupplier(s));
+        System.out.println(SupplierDAO.insertSupplier(s2));
+
+        System.out.println(SupplierDAO.getAllSuppliers()[0]);
+//        System.out.println(SupplierDAO.updateSupplier("0001","huadun","jiangsu","8888"));
+//        System.out.println(SupplierDAO.getAllSuppliers());
+//        System.out.println(SupplierDAO.deleteSupplier("0001"));
     }
 }
