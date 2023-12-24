@@ -9,5 +9,54 @@ public class Nurse {
     public int Nage;
     private String Npwd;
 
-    // Getters and setters with DAO update calls similar to Admin class
+    public Nurse() {
+    }
+
+    public Nurse(String nno, String nname, boolean nsex, int nage, String npwd) {
+        Nno = nno;
+        Nname = nname;
+        Nsex = nsex;
+        Nage = nage;
+        Npwd = npwd;
+    }
+
+    public String getNno() {
+        return Nno;
+    }
+
+    public void setNno(String nno) {
+        Nno = nno;
+    }
+
+    public String getNname() {
+        return Nname;
+    }
+
+    public void setNname(String nname) {
+        Nname = nname;
+    }
+
+    public boolean isNsex() {
+        return Nsex;
+    }
+
+    public void setNsex(boolean nsex) {
+        Nsex = nsex;
+    }
+
+    public int getNage() {
+        return Nage;
+    }
+
+    public void setNage(int nage) {
+        Nage = nage;
+    }
+
+    public String getNpwd() {
+        return Npwd;
+    }
+
+    public void setNpwd(String npwd) {
+        Npwd = npwd;
+    }
 }
