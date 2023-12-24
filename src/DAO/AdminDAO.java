@@ -87,12 +87,12 @@ public class AdminDAO {
         }
         return false;
     }
-    public static Admin selectByAno(String Ano) {
+    public static Admin selectByAno(String Aname) {
         Admin admin = null;
         try (Connection connection = DBUtil.getConnection()) {
             String sql = "SELECT * FROM Admin WHERE Ano = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, Ano);
+            preparedStatement.setString(1, Aname);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 admin = new Admin();
