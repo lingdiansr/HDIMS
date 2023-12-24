@@ -1,5 +1,11 @@
 package Frame;
 
 public class Doctor {
-    //用多种布局去实现 箱式布局管理器和网格布局管理器
+    //�ö��ֲ���ȥʵ�� ��ʽ���ֹ����������񲼾ֹ�����
+}
+
+    public static void main(String[] s) {
+        Doctor frame = new Doctor();
+        frame.setVisible(true);
+    }
 }

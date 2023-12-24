@@ -60,18 +60,17 @@ public class SupplierDAO {
             return false;
         }
     }
-
     public static Supplier[] getAllSuppliers() {
         Supplier[] suppliers = null;
         try {
             // 建立连接
             Connection connection = DBUtil.getConnection();
+            String query = "SELECT * FROM Supplier";
+            // 创建一个具有可滚动结果集的prepareStatement
+            PreparedStatement preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            // 创建一个具有可滚动结果集的语句
-            Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-
-            // 执行查询语句
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM Supplier");
+            // 执行查询
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             // 获取结果集中的行数
             if (resultSet.last()) {
@@ -96,7 +95,7 @@ public class SupplierDAO {
 
             // 关闭连接
             resultSet.close();
-            statement.close();
+            preparedStatement.close();
             connection.close();
 
         } catch (Exception e) {
