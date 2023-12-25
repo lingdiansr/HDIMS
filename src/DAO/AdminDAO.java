@@ -87,12 +87,12 @@ public class AdminDAO {
         }
         return false;
     }
-    public static Admin selectByAno(String Ano) {
+    public static Admin selectByAname(String Aname) {
         Admin admin = null;
         try (Connection connection = DBUtil.getConnection()) {
-            String sql = "SELECT * FROM Admin WHERE Ano = ?";
+            String sql = "SELECT * FROM Admin WHERE Aname = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, Ano);
+            preparedStatement.setString(1, Aname);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 admin = new Admin();
@@ -126,10 +126,10 @@ public class AdminDAO {
 
     public static void main(String[] args) {
         Admin a = new Admin("0001","aa",true,30,"123");
-        AdminDAO.insert(a);
-        System.out.println(AdminDAO.selectByAno("0001"));
-        System.out.println(AdminDAO.updateApwdByAname("aa", "123456"));
-        System.out.println(AdminDAO.selectByAno("0001"));
-        System.out.println(AdminDAO.deleteByAno("0001"));
+//        AdminDAO.insert(a);
+        System.out.println(AdminDAO.selectByAname("aa"));
+//        System.out.println(AdminDAO.updateApwdByAname("aa", "123456"));
+//        System.out.println(AdminDAO.selectByAno("0001"));
+//        System.out.println(AdminDAO.deleteByAno("0001"));
     }
 }
