@@ -1,4 +1,7 @@
 package Frame;
+import DAO.AdminDAO;
+import Service.UserService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -69,20 +72,39 @@ public class LoginFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String selectedValue = null;
+
+
         if (e.getSource() == SureButton) {
+            UserService us =new UserService();
             //打开另一个界面
             //有三个打开哪个,再做一次判断
             selectedValue = (String) IdentityCombox.getSelectedItem();
             if (selectedValue.equals("患者")) {
                 JOptionPane.showMessageDialog(null, "你打开了患者界面（目前没实现）");
+
             }
             //打开患者窗口
             else if (selectedValue.equals("医生")) {
                 System.out.println("Selected Option 2");
+
             } else if (selectedValue.equals("护士")) {
                 System.out.println("Selected Option 3");
+                if(us.NurseRight(UsernameField.getText(), PasswordField.getText())){
+                    dispose();
+                    new Nurse();
+                }
+
+
             } else if (selectedValue.equals("仓库管理员")) {
                 System.out.println("Selected Option 4");
+
+                if(us.AdminRight(UsernameField.getText(), PasswordField.getText())){
+                    dispose();
+                    new Warehousekeeper();
+                }
+
+
+
             }
         } else if (e.getSource() == CancelButton) {//点取消退出系统
             System.exit(0);
