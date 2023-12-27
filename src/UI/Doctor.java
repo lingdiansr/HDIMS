@@ -1,5 +1,7 @@
 package UI;
 
+import Service.DoctorService;
+
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.AbstractTableModel;
@@ -38,6 +40,7 @@ public class Doctor extends JFrame implements ActionListener {
     MyTableModel3 HavegivedMedicationModel = new MyTableModel3();
     JTable HaveTable = new JTable(HavegivedMedicationModel);
     JButton CreatMedicationButton = new JButton("生成药单");
+
     public Doctor() {
         this.setTitle("医生界面");
         this.setSize(800, 600);
@@ -96,14 +99,59 @@ public class Doctor extends JFrame implements ActionListener {
         this.add(ButtonPane);
     }
 
+    @Override//为了避免取消后还在表格中的问题，用到每次更新前清除的思想
+    public void actionPerformed(ActionEvent event) {
+        if (event.getSource() == ADDMedicationButton) {
+            freeTableModel.resetRowCount();
+            int k = 0;
+            int rowCount = GiveMedicationTable.getRowCount();
+            int selectedColumn = 2; // 第三列索引
+            for (int row = 0; row < rowCount; row++) {
+                boolean isSelected = (boolean) GiveMedicationTable.getValueAt(row, selectedColumn);
+                if (isSelected) { // 如果药物被选中
+                    String medicationName = (String) GiveMedicationTable.getValueAt(row, 0); // 获取药品名
+                    freeTableModel.setValueAt(medicationName, k, 0); // 更新药品名单元格
+                    k++;
+                }
+            }
+            JOptionPane.showMessageDialog(null, "已添加");
+        } else if (event.getSource() == CreatMedicationButton) {
+            // 在已开处方工具条中添加药物数据的逻辑
+            int rowCount = freeTableModel.getRowCount();
+            for (int row = 0; row < rowCount; row++) {
+                String medicationName = (String) freeTableModel.getValueAt(row, 0);
+                String quantity = (String) freeTableModel.getValueAt(row, 1);
+                String usage = (String) freeTableModel.getValueAt(row, 2);
+                // 在这里将药物数据添加到已开处方工具条的表格中
+                HavegivedMedicationModel.setValueAt(medicationName, row, 0);
+                HavegivedMedicationModel.setValueAt(quantity, row, 1);
+                HavegivedMedicationModel.setValueAt(usage, row, 2);
+            }
+            // 通知已开处方工具条的表格模型更新数据
+            JOptionPane.showMessageDialog(null, "药单创建成功！请去已开处方查看");
+        } else if (event.getSource() == SureButton) {
+            String searchText = SearcherField.getText();
+            DoctorService ds = new DoctorService();
+            Object[][] searchResult = ds.Search(searchText);
+            Object[][] searchResultWithCheck = new Object[searchResult.length][searchResult[0].length + 1];
+            for (int i = 0; i < searchResult.length; i++) {
+                System.arraycopy(searchResult[i], 0, searchResultWithCheck[i], 0, searchResult[i].length);
+                searchResultWithCheck[i][searchResult[i].length] = false;
+            }
+            myTableModel.setData(searchResultWithCheck);
+        }
 
-    class MyTableModel extends AbstractTableModel {
-        final String[] columnNames = {"药名", "产地", "选择"};
-        final Object[][] data = {
-                {"阿司匹林", "china", false},
-                {"蒙脱石散", "china", false}
-        };
-        final Class[] columnClasses = {String.class, String.class, Boolean.class};
+
+    }
+    public static void main (String[] args){
+        Doctor frame = new Doctor();
+        frame.setVisible(true);
+    }
+
+    public class MyTableModel extends AbstractTableModel {
+        final String[] columnNames = {"PDno", "PDname", "PDlife", "PDnum", "选择"};
+        Object[][] data = {{" ", " ", " ", 0, false} };
+        final Class[] columnClasses = {String.class, String.class, String.class, Integer.class, Boolean.class};
 
         public int getColumnCount() {
             return columnNames.length;
@@ -118,7 +166,11 @@ public class Doctor extends JFrame implements ActionListener {
         }
 
         public Object getValueAt(int row, int col) {
-            return data[row][col];
+            if (row < data.length && col < data[row].length) {
+                return data[row][col];
+            } else {
+                return null; // Handle the case where the row or column index is out of bounds
+            }
         }
 
         public Class getColumnClass(int c) {
@@ -126,22 +178,23 @@ public class Doctor extends JFrame implements ActionListener {
         }
 
         public boolean isCellEditable(int row, int col) { // 设置编辑单元格
-            return col == 2; // 只允许编辑选择列
+            return col == 4; // 只允许编辑选择列
         }
 
         public void setValueAt(Object value, int row, int col) {
             data[row][col] = value;
             fireTableCellUpdated(row, col);
         }
+
+        public void setData(Object[][] newData) {
+            data = newData;
+            fireTableDataChanged(); // Notify the table model that the data has changed
+        }
     }
 
     class MyTableModel2 extends AbstractTableModel {
         final String[] columnNames = {"药名", "数量", "服用方法"};
-        final Object[][] data = {
-                {"", "", ""},
-                {"", "", ""},
-                {"", "", ""}
-        };
+        final Object[][] data = {{"", "", ""}, {"", "", ""}, {"", "", ""}};
 
         public int getColumnCount() {
             return columnNames.length;
@@ -183,11 +236,7 @@ public class Doctor extends JFrame implements ActionListener {
 
     class MyTableModel3 extends AbstractTableModel {
         final String[] columnNames = {"药名", "数量", "服用方法"};
-        final Object[][] data = {
-                {"", "", ""},
-                {"", "", ""},
-                {"", "", ""}
-        };
+        final Object[][] data = {{"", "", ""}, {"", "", ""}, {"", "", ""}};
 
         public int getColumnCount() {
             return columnNames.length;
@@ -227,45 +276,4 @@ public class Doctor extends JFrame implements ActionListener {
 
     }
 
-
-    @Override//为了避免取消后还在表格中的问题，用到每次更新前清除的思想
-    public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == ADDMedicationButton) {
-            freeTableModel.resetRowCount();
-            int k = 0;
-            int rowCount = GiveMedicationTable.getRowCount();
-            int selectedColumn = 2; // 第三列索引
-            for (int row = 0; row < rowCount; row++) {
-                boolean isSelected = (boolean) GiveMedicationTable.getValueAt(row, selectedColumn);
-                if (isSelected) { // 如果药物被选中
-                    String medicationName = (String) GiveMedicationTable.getValueAt(row, 0); // 获取药品名
-                    freeTableModel.setValueAt(medicationName, k, 0); // 更新药品名单元格
-                    k++;
-                }
-            }
-            JOptionPane.showMessageDialog(null, "已添加");
-        } else if (event.getSource() == CreatMedicationButton) {
-            // 在已开处方工具条中添加药物数据的逻辑
-            int rowCount = freeTableModel.getRowCount();
-            for (int row = 0; row < rowCount; row++) {
-                String medicationName = (String) freeTableModel.getValueAt(row, 0);
-                String quantity = (String) freeTableModel.getValueAt(row, 1);
-                String usage = (String) freeTableModel.getValueAt(row, 2);
-                // 在这里将药物数据添加到已开处方工具条的表格中
-                HavegivedMedicationModel.setValueAt(medicationName, row, 0);
-                HavegivedMedicationModel.setValueAt(quantity, row, 1);
-                HavegivedMedicationModel.setValueAt(usage, row, 2);
-            }
-            // 通知已开处方工具条的表格模型更新数据
-            JOptionPane.showMessageDialog(null, "药单创建成功！请去已开处方查看");
-        }
-    }
-
-
-
-    public static void main(String[] args) {
-        Doctor frame = new Doctor();
-        frame.setVisible(true);
-    }
 }
-

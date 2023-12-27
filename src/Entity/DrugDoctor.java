@@ -11,6 +11,16 @@ public class DrugDoctor extends Drug{
         this.PDnum = PDnum;
     }
 
+    @Override
+    public String toString() {
+        return "DrugDoctor{" +
+                "PDnum=" + PDnum +
+                ", PDno='" + PDno + '\'' +
+                ", PDname='" + PDname + '\'' +
+                ", PDlife=" + PDlife +
+                '}';
+    }
+
     public int getPDnum() {
         return PDnum;
     }
