@@ -28,6 +28,49 @@ public class PIDDAO {
             return false;
         }
     }
+    //        根据处方编号得到该处方中包含所有的药品的编号和数量
+    public static PID[] getDrugs(int Pno){
+        PID[] pidArray = null;
+        try {
+            // 建立连接
+            Connection connection = DBUtil.getConnection();
+            String query = "SELECT * FROM PID where Pno=?";
+            // 创建带有可滚动结果集的预编译语句
+            PreparedStatement preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            preparedStatement.setInt(1, Pno);
+            // 执行查询
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // 获取结果集的行数
+            resultSet.last();
+            int rowCount = resultSet.getRow();
+            resultSet.beforeFirst();
+
+            // 创建数组
+            pidArray = new PID[rowCount];
+
+            // 遍历结果集并填充数组
+            int index = 0;
+            while (resultSet.next()) {
+                PID pid = new PID();
+                pid.Pno = resultSet.getInt("Pno");
+                pid.PDno = resultSet.getString("PDno");
+                pid.PDnum = resultSet.getShort("PDnum");
+                pidArray[index] = pid;
+                index++;
+            }
+
+            // 关闭连接
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pidArray;
+    }
+
     public static PID[] getAllPID() {
         PID[] pidArray = null;
         try {
@@ -115,25 +158,29 @@ public class PIDDAO {
 
     // 测试方法
     public static void main(String[] args) {
-        PID pid = new PID();
-        pid.Pno = 1;
-        pid.PDno = "doctor1";
-        pid.PDnum = 2;
-
-        System.out.println(PIDDAO.insertPID(pid));
-        PID[] pidArray = PIDDAO.getAllPID();
-        for (PID p : pidArray) {
-            System.out.println("Pno: " + p.Pno + ", PDno: " + p.PDno + ", PDnum: " + p.PDnum);
-        }
-
-        System.out.println(PIDDAO.updatePID(1, "newDoctor", (short) 3));
-        pidArray = PIDDAO.getAllPID();
-        for (PID p : pidArray) {
-            System.out.println("Pno: " + p.Pno + ", PDno: " + p.PDno + ", PDnum: " + p.PDnum);
-        }
-
-        System.out.println(PIDDAO.deletePID(1));
-        pidArray = PIDDAO.getAllPID();
+//        PID pid = new PID();
+//        pid.Pno = 1;
+//        pid.PDno = "doctor1";
+//        pid.PDnum = 2;
+//
+//        System.out.println(PIDDAO.insertPID(pid));
+//        PID[] pidArray = PIDDAO.getAllPID();
+//        for (PID p : pidArray) {
+//            System.out.println("Pno: " + p.Pno + ", PDno: " + p.PDno + ", PDnum: " + p.PDnum);
+//        }
+//
+//        System.out.println(PIDDAO.updatePID(1, "newDoctor", (short) 3));
+//        pidArray = PIDDAO.getAllPID();
+//        for (PID p : pidArray) {
+//            System.out.println("Pno: " + p.Pno + ", PDno: " + p.PDno + ", PDnum: " + p.PDnum);
+//        }
+//
+//        System.out.println(PIDDAO.deletePID(1));
+//        pidArray = PIDDAO.getAllPID();
+//        for (PID p : pidArray) {
+//            System.out.println("Pno: " + p.Pno + ", PDno: " + p.PDno + ", PDnum: " + p.PDnum);
+//        }
+        PID[] pidArray = PIDDAO.getDrugs(1);
         for (PID p : pidArray) {
             System.out.println("Pno: " + p.Pno + ", PDno: " + p.PDno + ", PDnum: " + p.PDnum);
         }
