@@ -6,7 +6,7 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.event.*;
 import java.awt.event.ActionListener;
 
-public class Doctor extends JFrame {
+public class Doctor extends JFrame implements ActionListener {
     JTabbedPane ButtonPane = new JTabbedPane();//让三个工具条共享同一屏幕区域
 
     //开处方工具条
@@ -36,6 +36,7 @@ public class Doctor extends JFrame {
     //表格
     MyTableModel myTableModel = new MyTableModel();
     JTable GiveMedicationTable = new JTable(myTableModel);
+    JButton CreatMedicationButton = new JButton("生成药单");
 
     MyTableModel2 freeTableModel = new MyTableModel2();
     JTable freeTable = new JTable(freeTableModel);
@@ -52,7 +53,7 @@ public class Doctor extends JFrame {
         GiveMedicationTable.setPreferredScrollableViewportSize(new Dimension(700, 100));
         freeTable.setPreferredScrollableViewportSize(new Dimension(700, 100));
 
-        GiveMedicationToolbar.setLayout(new BorderLayout());
+        GiveMedicationToolbar.setLayout(new BoxLayout(GiveMedicationToolbar, BoxLayout.Y_AXIS));
         HavegivedMedicationToolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
         // 将标签文字提示添加到开处方新面板
 
@@ -85,9 +86,11 @@ public class Doctor extends JFrame {
         Seacherpannel.add(SearcherLable);
         Seacherpannel.add(SearcherField);
         Seacherpannel.add(SureButton);
+        Seacherpannel.add(CreatMedicationButton);
         Seacherpannel.setPreferredSize(new Dimension(400, 30));
 
-
+        SureButton.addActionListener(this);
+        CreatMedicationButton.addActionListener(this);
         LT.setLayout(new BorderLayout());
         LT.add(MedicationListLable, "North");
         LT.add(freeTable, "South");
@@ -104,6 +107,7 @@ public class Doctor extends JFrame {
 
 
 
+
         this.add(ButtonPane);
         //this.add(Seacherpannel);
         //this.add(scrollPane);
@@ -112,12 +116,14 @@ public class Doctor extends JFrame {
 
     }
 
+
     class MyTableModel extends AbstractTableModel {
         final String[] columnNames = {"药名", "产地", "选择"};
         final Object[][] data = {
-                {"阿司匹林", "china", new Boolean(true)},
-                {"蒙脱石散", "china", new Boolean(true)}
+                {"阿司匹林", "china", false},
+                {"蒙脱石散", "china", false}
         };
+        final Class[] columnClasses = {String.class, String.class, Boolean.class};
 
         public int getColumnCount() {
             return columnNames.length;
@@ -127,7 +133,7 @@ public class Doctor extends JFrame {
             return data.length;
         }
 
-        public String getColumnName(int col) { // 修改这个方法名称
+        public String getColumnName(int col) {
             return columnNames[col];
         }
 
@@ -136,15 +142,25 @@ public class Doctor extends JFrame {
         }
 
         public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
+            return columnClasses[c];
+        }
+
+        public boolean isCellEditable(int row, int col) { // 设置编辑单元格
+            return col == 2; // 只允许编辑选择列
+        }
+
+        public void setValueAt(Object value, int row, int col) {
+            data[row][col] = value;
+            fireTableCellUpdated(row, col);
         }
     }
 
     class MyTableModel2 extends AbstractTableModel {
-        final String[] columnNames = {"药名", "产地", "选择"};
+        final String[] columnNames = {"药名", "数量", "服用方法"};
         final Object[][] data = {
-                {"", "", new Boolean(true)},
-                {"", "", new Boolean(true)}
+                {"", "", ""},
+                {"", "", ""},
+                {"", "", ""}
         };
 
         public int getColumnCount() {
@@ -163,10 +179,39 @@ public class Doctor extends JFrame {
             return data[row][col];
         }
 
+        public void setValueAt(Object value, int row, int col) {
+            data[row][col] = value;
+            fireTableCellUpdated(row, col);
+        }
+
         public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
         }
     }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        if (event.getSource() == CreatMedicationButton) {
+            int selectedRow = GiveMedicationTable.getSelectedRow();
+            int selectedColumn = GiveMedicationTable.getSelectedColumn();
+            int RowCount = GiveMedicationTable.getRowCount();
+            for (int k = 0; k <= RowCount; k++) {
+                if (selectedColumn == 2) { // 第三列
+                    GiveMedicationTable.setValueAt(true, selectedRow, selectedColumn); // 修改为true
+
+                    // 更新选中的药品名到freeTable
+                    String medicationName = (String) GiveMedicationTable.getValueAt(k, 0); // 获取药品名
+                    freeTableModel.setValueAt(medicationName, k, 0); // 更新freeTable中对应行的药品名单元格的值
+                    freeTable.repaint(); // 刷新freeTable显示
+
+
+                }
+            }
+            JOptionPane.showMessageDialog(null, "已生成");
+        }
+    }
+
+
 
     public static void main(String[] args) {
         Doctor frame = new Doctor();
