@@ -7,17 +7,12 @@ import java.awt.event.*;
 import java.awt.event.ActionListener;
 
 public class Doctor extends JFrame implements ActionListener {
-    JTabbedPane ButtonPane = new JTabbedPane();//让三个工具条共享同一屏幕区域
+    JTabbedPane ButtonPane = new JTabbedPane();//让两个工具条共享同一屏幕区域
 
     //开处方工具条
     JToolBar GiveMedicationToolbar = new JToolBar("开处方");
     JPanel GiveMedicationPanel = new JPanel(); // 新增一个中间容器
 
-
-
-    //开处方中已经被选择的药物
-    JLabel HaveSelectedMedicationLable = new JLabel("药单：");
-    JPanel HaveSelectedMedicationPannel = new JPanel();
 
     //-------------------------------------------------------------------------------
     //已开处方工具条
@@ -36,11 +31,11 @@ public class Doctor extends JFrame implements ActionListener {
     //表格
     MyTableModel myTableModel = new MyTableModel();
     JTable GiveMedicationTable = new JTable(myTableModel);
-    JButton CreatMedicationButton = new JButton("生成药单");
+    JButton ADDMedicationButton = new JButton("添加药物至药单");
 
     MyTableModel2 freeTableModel = new MyTableModel2();
     JTable freeTable = new JTable(freeTableModel);
-
+    JButton CreatMedicationButton = new JButton("生成药单");
     public Doctor() {
         this.setTitle("医生界面");
         this.setSize(800, 600);
@@ -49,51 +44,40 @@ public class Doctor extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(ButtonPane, BorderLayout.CENTER);
 
-        //开药表
+        //药表
         GiveMedicationTable.setPreferredScrollableViewportSize(new Dimension(700, 100));
         freeTable.setPreferredScrollableViewportSize(new Dimension(700, 100));
 
         GiveMedicationToolbar.setLayout(new BoxLayout(GiveMedicationToolbar, BoxLayout.Y_AXIS));
         HavegivedMedicationToolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
-        // 将标签文字提示添加到开处方新面板
+
 
 
 
 
         //将药单标签加入中间容器，中间容器还没放到大框架里面，要新开一个布局的中间容器，放到搜索下面（包括搜索）
-        HaveSelectedMedicationPannel.add(HaveSelectedMedicationLable);
+        //HaveSelectedMedicationPannel.add(HaveSelectedMedicationLable);
 
         //将按钮加入已开处方工具条
-//        MedicationInformationToolbar.add(MedicationNameButton);
-//        MedicationInformationToolbar.add(MedicationNoButton);
-//        MedicationInformationToolbar.add(MedicationBatchesButton);
-//        MedicationInformationToolbar.add(MedicationNumberButton);
-//        MedicationInformationToolbar.add(MedicationPurchasingstaffButton);
-//        MedicationInformationToolbar.add(MedicationDestructionstaffButton);
 
 
-        //将按钮加入时间信息工具条
-//        TimeInformationToolbar.add(ShelfLifeButton);
-//        TimeInformationToolbar.add(InboundTimeButton);
-//        TimeInformationToolbar.add(OutboundTimeButton);
-//        TimeInformationToolbar.add(DestructionTimeButton);
-
-
-        // ButtonPane.addTab("已开处方", null, TimeInformationToolbar);
+        ButtonPane.addTab("已开处方", null, HavegivedMedicationToolbar);
 
         //搜索组件放入中间容器，放到工具条里才对,我之前都放在公共了！
         SearcherField.setColumns(19);
         Seacherpannel.add(SearcherLable);
         Seacherpannel.add(SearcherField);
         Seacherpannel.add(SureButton);
-        Seacherpannel.add(CreatMedicationButton);
+        Seacherpannel.add(ADDMedicationButton);
         Seacherpannel.setPreferredSize(new Dimension(400, 30));
 
         SureButton.addActionListener(this);
+        ADDMedicationButton.addActionListener(this);
         CreatMedicationButton.addActionListener(this);
         LT.setLayout(new BorderLayout());
         LT.add(MedicationListLable, "North");
-        LT.add(freeTable, "South");
+        LT.add(freeTable, "Center");
+        LT.add(CreatMedicationButton, "South");
 
         //table.setPreferredScrollableViewportSize(new Dimension(350, 200));
         GiveMedicationToolbar.add(GiveMedicationPanel, "North");
@@ -107,13 +91,10 @@ public class Doctor extends JFrame implements ActionListener {
 
 
 
-
-        this.add(ButtonPane);
-        //this.add(Seacherpannel);
-        //this.add(scrollPane);
         //将工具条加入总体的标签面板
         ButtonPane.addTab("开处方", null, GiveMedicationToolbar);
-
+        ButtonPane.addTab("已开处方", null, HavegivedMedicationToolbar);
+        this.add(ButtonPane);
     }
 
 
@@ -188,40 +169,40 @@ public class Doctor extends JFrame implements ActionListener {
             return getValueAt(0, c).getClass();
         }
 
-        public void setRowCount() {
+        public void resetRowCount() {
             for (int row = 0; row < data.length; row++) {
                 data[row][0] = ""; // 或 data[row][0] = null;
             }
             fireTableDataChanged();
         }
 
-
+        public boolean isCellEditable(int row, int col) {
+            return true; // 设置所有单元格都可编辑
+        }
 
     }
 
 
     @Override//为了避免取消后还在表格中的问题，用到每次更新前清除的思想
     public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == CreatMedicationButton) {
-            int selectedRow = GiveMedicationTable.getSelectedRow();
-            int selectedColumn = GiveMedicationTable.getSelectedColumn();
-            int RowCount = GiveMedicationTable.getRowCount();
-            for (int k = 0; k <= RowCount; k++) {
-                if (selectedColumn == 2) { // 第三列
-                    GiveMedicationTable.setValueAt(true, selectedRow, selectedColumn); // 修改为true
-
-                    // 更新选中的药品名到freeTable
-                    String medicationName = (String) GiveMedicationTable.getValueAt(k, 0); // 获取药品名
-                    freeTableModel.setValueAt(medicationName, k, 0); // 更新freeTable中对应行的药品名单元格的值
-                    freeTable.repaint(); // 刷新freeTable显示
-
-
+        if (event.getSource() == ADDMedicationButton) {
+            freeTableModel.resetRowCount();
+            int k = 0;
+            int rowCount = GiveMedicationTable.getRowCount();
+            int selectedColumn = 2; // 第三列索引
+            for (int row = 0; row < rowCount; row++) {
+                boolean isSelected = (boolean) GiveMedicationTable.getValueAt(row, selectedColumn);
+                if (isSelected) { // 如果药物被选中
+                    String medicationName = (String) GiveMedicationTable.getValueAt(row, 0); // 获取药品名
+                    freeTableModel.setValueAt(medicationName, k, 0); // 更新对应行的药品名单元格的值,应该不是对应行数
+                    k++;
                 }
             }
-            JOptionPane.showMessageDialog(null, "已生成");
+            JOptionPane.showMessageDialog(null, "已添加");
+        } else if (event.getSource() == CreatMedicationButton) {
+            JOptionPane.showMessageDialog(null, "处方创建成功！请去已开处方查看");
         }
     }
-
 
 
     public static void main(String[] args) {
@@ -229,3 +210,4 @@ public class Doctor extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 }
+
