@@ -57,7 +57,9 @@ public class Warehousekeeper extends JFrame implements ActionListener {
         this.setLayout(new BorderLayout());
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        SureButton1.addActionListener(this);
+        SureButton2.addActionListener(this);
+        SureButton3.addActionListener(this);
 
         SupplierInformationToolbar.setLayout(new BoxLayout(SupplierInformationToolbar, BoxLayout.Y_AXIS));
         // 搜索组件
@@ -124,11 +126,11 @@ public class Warehousekeeper extends JFrame implements ActionListener {
             String searchtext = SearcherField1.getText();
             AdminService as = new AdminService();
             Object[][] searchResult= as.search(searchtext);
-            String[] columnNames = {"Sno", "Sname", "Saddr", "Sphone"};
-
-            DefaultTableModel model = (DefaultTableModel) table1.getModel();
-            model.setDataVector(searchResult, columnNames);
+            String[] columnNames = {"编号", "供应商名称", "供应商地址", "联系方式"};
+            DefaultTableModel model = new DefaultTableModel(searchResult, columnNames);
+            table1.setModel(model);
         }
+
     }
 }
 
