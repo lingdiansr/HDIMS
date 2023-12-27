@@ -35,7 +35,7 @@ public class UserService {
     }
 
 
-
+//     医生登录匹配
     public boolean DoctorRight(String Dname,String Dpwd){
         //数据访问层的方法,获取护士输入的姓名，和密码，数据库存在信息则返回true
         DoctorDAO DDAO = new DoctorDAO();
