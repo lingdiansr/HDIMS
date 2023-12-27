@@ -60,7 +60,7 @@ public class SupplierDAO {
             return false;
         }
     }
-    public static Supplier[] getAllSuppliers() {
+    public static Supplier[] selectAllSuppliers() {
         Supplier[] suppliers = null;
         try {
             // 建立连接
@@ -110,9 +110,53 @@ public class SupplierDAO {
         System.out.println(SupplierDAO.insertSupplier(s));
         System.out.println(SupplierDAO.insertSupplier(s2));
 
-        System.out.println(SupplierDAO.getAllSuppliers()[0]);
+//        System.out.println(SupplierDAO.getAllSuppliers()[0]);
 //        System.out.println(SupplierDAO.updateSupplier("0001","huadun","jiangsu","8888"));
 //        System.out.println(SupplierDAO.getAllSuppliers());
 //        System.out.println(SupplierDAO.deleteSupplier("0001"));
+    }
+
+    public static Supplier[] fuzzySelectBy(String text) {
+        Supplier[] suppliers = null;
+        try {
+            // 建立连接
+            Connection connection = DBUtil.getConnection();
+            String query = "SELECT * FROM Supplier WHERE Sno LIKE N'%"+text+"%' OR Sname LIKE N'%"+text+"%' OR Saddr LIKE N'%"+text+"%' OR Sphone LIKE N'%"+text+"%'";
+            // 创建一个具有可滚动结果集的prepareStatement
+            PreparedStatement preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            // 执行查询
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // 获取结果集中的行数
+            if (resultSet.last()) {
+                int rowCount = resultSet.getRow();
+                resultSet.beforeFirst();
+
+                // 创建一个Supplier数组
+                suppliers = new Supplier[rowCount];
+                int index = 0;
+
+                // 遍历结果集并填充数组
+                while (resultSet.next()) {
+                    Supplier supplier = new Supplier();
+                    supplier.Sno = resultSet.getString("Sno");
+                    supplier.Sname = resultSet.getString("Sname");
+                    supplier.Saddr = resultSet.getString("Saddr");
+                    supplier.Sphone = resultSet.getString("Sphone");
+                    suppliers[index] = supplier;
+                    index++;
+                }
+            }
+
+            // 关闭连接
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return suppliers;
     }
 }
