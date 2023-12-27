@@ -1,6 +1,9 @@
 package Frame;
 
 import DAO.AdminDAO;
+import Entity.Admin;
+import Entity.Nurse;
+import Entity.Doctor;
 import Service.UserService;
 
 import javax.swing.*;
@@ -106,21 +109,30 @@ public class LoginFrame extends JFrame implements ActionListener {
             UserService us = new UserService();
             if (Identitydoctor.isSelected()) {
                 System.out.println("Selected Option 1");
-                if (us.DoctorRight(id, password)) {
+                Doctor doctor = new Doctor();
+                doctor.setDno(id);
+                doctor.setDpwd(password);
+                if (us.DoctorRight(doctor)) {
                     dispose();
                     new Doctor();
                 }
 
             } else if (Identitynurse.isSelected()) {
                 System.out.println("Selected Option 2");
-                if (us.NurseRight(id, password)) {
+                Nurse nurse = new Nurse();
+                nurse.setNno(id);
+                nurse.setNpwd(password);
+                if (us.NurseRight(nurse)) {
                     dispose();
                     new Nurse();
                 }
 
             } else if (Identityadmin.isSelected()) {
                 System.out.println("Selected Option 3");
-                if (us.AdminRight(id, password)) {
+                Admin admin = new Admin();
+                admin.setAno(id);
+                admin.setApwd(password);
+                if (us.AdminRight(admin)) {
                     dispose();
                     new Warehousekeeper();
                 }

@@ -10,11 +10,10 @@ import Entity.Nurse;
 
 public class UserService {
         //库房管理员登录匹配
-        public boolean AdminRight(String Aname,String Apwd){
+        public boolean AdminRight(Admin a){
             //数据访问层的方法,获取管理员输入的姓名，和密码，数据库存在信息则返回true
-            AdminDAO adminDAO = new AdminDAO();
-            Admin admin = adminDAO.selectByAno(Aname);
-            if (admin.getAname() !=null && Apwd.equals(admin.getApwd().trim())){
+            Admin admin = AdminDAO.selectByAno(a.getAno());
+            if (admin.getAno() !=null && a.getApwd().equals(admin.getApwd().trim())){
                 return true;
             }else{
                 return false;
@@ -22,11 +21,10 @@ public class UserService {
 
         }
 //        护士登陆匹配
-    public boolean NurseRight(String Nname,String Npwd){
+    public boolean NurseRight(Nurse n){
         //数据访问层的方法,获取护士输入的姓名，和密码，数据库存在信息则返回true
-        NurseDAO nDAO = new NurseDAO();
-        Nurse nurse = NurseDAO.selectByNno(Nname);
-        if (nurse.getNname() !=null && Npwd.equals(nurse.getNpwd().trim())){
+        Nurse nurse = NurseDAO.selectByNno(n.getNno());
+        if (nurse.getNno() !=null && n.getNpwd().equals(nurse.getNpwd().trim())){
             return true;
         }else{
             return false;
@@ -36,11 +34,10 @@ public class UserService {
 
 
 
-    public boolean DoctorRight(String Dname,String Dpwd){
+    public boolean DoctorRight(Doctor d){
         //数据访问层的方法,获取护士输入的姓名，和密码，数据库存在信息则返回true
-        DoctorDAO DDAO = new DoctorDAO();
-        Doctor doctor = DoctorDAO.selectByDno(Dname);
-        if (doctor.getDname() !=null && Dpwd.equals(doctor.getDpwd().trim())){
+        Doctor doctor = DoctorDAO.selectByDno(d.getDno());
+        if (doctor.getDno() !=null && d.getDpwd().equals(doctor.getDpwd().trim())){
             return true;
         }else{
             return false;
