@@ -1,13 +1,17 @@
 package UI;
 
+import Service.AdminService;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 //任务一：按钮没调整好大小，左右很空
 //任务一：工具条的高度没调整好，上下很空
 //任务三：按钮对应的表格没实现响应
 //任务四：表格边上的滚动还没实现
-public class Warehousekeeper extends JFrame {
+public class Warehousekeeper extends JFrame implements ActionListener {
 
     //供应商工具条
     JToolBar SupplierInformationToolbar = new JToolBar("供应商信息");
@@ -97,12 +101,22 @@ public class Warehousekeeper extends JFrame {
         this.add(Seacherpannel);
         this.add(table);
 
-
+        SureButton.addActionListener(this);
     }
 
     public static void main(String[] s) {
         Warehousekeeper frame = new Warehousekeeper();
         frame.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource()==SureButton && SupplierInformationToolbar.isEnabled())
+        {
+            String searchtext =SearcherField.getText();
+            AdminService as = new AdminService();
+            as.search(searchtext);
+        }
     }
 }
 

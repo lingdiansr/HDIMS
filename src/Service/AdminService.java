@@ -7,6 +7,11 @@ public class AdminService {
     }
     public Supplier[] search(String text){
         return SupplierDAO.fuzzySelectBy(text);
+//        Supplier[] ss = SupplierDAO.fuzzySelectBy(text);
+//        for(Supplier s:ss){
+//            System.out.println(s);
+//        }
+//        return ss;
     }
     public static void main(String[] args) {
         AdminService as = new AdminService();
