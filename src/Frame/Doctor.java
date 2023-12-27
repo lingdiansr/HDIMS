@@ -197,12 +197,14 @@ public class Doctor extends JFrame implements ActionListener {
             int RowCount = GiveMedicationTable.getRowCount();
             for (int k = 0; k <= RowCount; k++) {
                 if (selectedColumn == 2) { // 第三列
-                    GiveMedicationTable.setValueAt(true, selectedRow, selectedColumn); // 修改为true
+                    if (==true){
+                        //GiveMedicationTable.setValueAt(true, k, selectedColumn); // 修改为true
+                        // 更新选中的药品名到freeTable
+                        String medicationName = (String) GiveMedicationTable.getValueAt(k, 0); // 获取药品名
+                        freeTableModel.setValueAt(medicationName, k, 0); // 更新freeTable中对应行的药品名单元格的值
+                        freeTable.repaint(); // 刷新freeTable显示
+                    }
 
-                    // 更新选中的药品名到freeTable
-                    String medicationName = (String) GiveMedicationTable.getValueAt(k, 0); // 获取药品名
-                    freeTableModel.setValueAt(medicationName, k, 0); // 更新freeTable中对应行的药品名单元格的值
-                    freeTable.repaint(); // 刷新freeTable显示
 
 
                 }
