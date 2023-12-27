@@ -1,10 +1,7 @@
-package Frame;
+package UI;
 
 import javax.swing.*;
 import java.awt.*;
-import javax.swing.table.AbstractTableModel;
-import java.awt.event.*;
-import java.awt.event.ActionListener;
 
 //任务一：按钮没调整好大小，左右很空
 //任务一：工具条的高度没调整好，上下很空

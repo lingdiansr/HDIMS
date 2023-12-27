@@ -1,4 +1,5 @@
-package Frame;
+package UI;
+
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.AbstractTableModel;
@@ -202,24 +203,25 @@ public class Doctor extends JFrame implements ActionListener {
     @Override//为了避免取消后还在表格中的问题，用到每次更新前清除的思想
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == CreatMedicationButton) {
-            freeTableModel.setRowCount();
-            int k = 0;
-            int rowCount = GiveMedicationTable.getRowCount();
-            int selectedColumn = 2; // 第三列索引
-            for (int row = 0; row < rowCount; row++) {
-                boolean isSelected = (boolean) GiveMedicationTable.getValueAt(row, selectedColumn);
-                if (isSelected) { // 如果药物被选中
-                    String medicationName = (String) GiveMedicationTable.getValueAt(row, 0); // 获取药品名
-                    // for (int k=row;k<rowCount ;k++) {
-                    //   String name = new String(String.valueOf(freeTableModel.getValueAt(k,0)));
-                    // if(name!=null)
-                    freeTableModel.setValueAt(medicationName, k, 0); // 更新对应行的药品名单元格的值,应该不是对应行数
-                    k++;
-                    }
+            int selectedRow = GiveMedicationTable.getSelectedRow();
+            int selectedColumn = GiveMedicationTable.getSelectedColumn();
+            int RowCount = GiveMedicationTable.getRowCount();
+            for (int k = 0; k <= RowCount; k++) {
+                if (selectedColumn == 2) { // 第三列
+                    GiveMedicationTable.setValueAt(true, selectedRow, selectedColumn); // 修改为true
+
+                    // 更新选中的药品名到freeTable
+                    String medicationName = (String) GiveMedicationTable.getValueAt(k, 0); // 获取药品名
+                    freeTableModel.setValueAt(medicationName, k, 0); // 更新freeTable中对应行的药品名单元格的值
+                    freeTable.repaint(); // 刷新freeTable显示
+
+
                 }
             }
             JOptionPane.showMessageDialog(null, "已生成");
         }
+    }
+
 
 
     public static void main(String[] args) {
@@ -227,4 +229,3 @@ public class Doctor extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 }
-
