@@ -69,6 +69,22 @@ public class PrescriptionDAO {
         }
     }
 
+    public static boolean updatePrescriptionPstate(int Pno,Date Htime) {
+        try {
+          //  System.out.println(new java.sql.Date(Htime.getTime()));
+            Connection connection = DBUtil.getConnection();
+            Statement statement = connection.createStatement();
+            String query = "UPDATE Prescription SET Pstate= '" +true+ "', Htime ='" + new java.sql.Date(Htime.getTime()) + "' WHERE Pno = " + Pno;
+            int rowsAffected = statement.executeUpdate(query);
+            statement.close();
+            connection.close();
+            return rowsAffected > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // 获取所有处方信息
     public static Prescription[] getAllPrescriptions() {
         Prescription[] prescriptions = null;
@@ -164,6 +180,7 @@ public class PrescriptionDAO {
         }
         return prescriptions;
     }
+
 
     // 测试方法
     public static void main(String[] args) {
