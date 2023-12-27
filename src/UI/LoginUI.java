@@ -1,6 +1,5 @@
-package Frame;
+package UI;
 
-import DAO.AdminDAO;
 import Entity.Admin;
 import Entity.Nurse;
 import Entity.Doctor;
@@ -9,11 +8,10 @@ import Service.UserService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.IdentityHashMap;
 
-public class LoginFrame extends JFrame implements ActionListener {
+public class LoginUI extends JFrame implements ActionListener {
 
-//使用复选框进行身份选择
+    // 使用复选框进行身份选择
     JLabel IdentityLable = new JLabel("  身 份:");
     JCheckBox Identityadmin = new JCheckBox("仓库管理员");
     JCheckBox Identitynurse = new JCheckBox("护士");
@@ -33,9 +31,9 @@ public class LoginFrame extends JFrame implements ActionListener {
     JPanel PasswordPannel = new JPanel();
     JPanel ButtonPannel = new JPanel();
 
-    public LoginFrame() {
+    public LoginUI() {
 
-        //将三个身份的复选框逐个放进一个按钮里，同时使用一个对象来控制身份的选择，每次只能选择一个
+        // 将三个身份的复选框逐个放进一个按钮里，同时使用一个对象来控制身份的选择，每次只能选择一个
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(Identityadmin);
         buttonGroup.add(Identitynurse);
@@ -61,7 +59,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         PasswordPannel.add(PasswordLable);
         PasswordPannel.add(PasswordField);
-        //使用空Label来调整按钮间的间距
+        // 使用空Label来调整按钮间的间距
         ButtonPannel.add(SureButton);
         ButtonPannel.add(new JLabel("    "));
         ButtonPannel.add(new JLabel("    "));
@@ -80,7 +78,7 @@ public class LoginFrame extends JFrame implements ActionListener {
         Identityadmin.addActionListener(this);
         Identitynurse.addActionListener(this);
         Identitydoctor.addActionListener(this);
-        //设置字体大小
+        // 设置字体大小
         Font font = new Font("微软雅黑", Font.PLAIN, 40);
         Font font1 = new Font("微软雅黑", Font.PLAIN, 36);
         Identityadmin.setFont(font1);
@@ -109,11 +107,12 @@ public class LoginFrame extends JFrame implements ActionListener {
             if (id.isEmpty() || password.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "请正确输入用户名和密码", "错误", JOptionPane.ERROR_MESSAGE);
             } else {
-
                 UserService us = new UserService();
                 Nurse nurse = null;
                 Doctor doctor = null;
-                if (Identitydoctor.isSelected()) {
+                if (!Identitydoctor.isSelected() && !Identitynurse.isSelected() && !Identityadmin.isSelected()) {
+                    JOptionPane.showMessageDialog(this, "请选择身份", "错误", JOptionPane.ERROR_MESSAGE);
+                } else if (Identitydoctor.isSelected()) {
                     System.out.println("Selected Option 1");
                     doctor = new Doctor();
                     doctor.setDno(id);
@@ -122,7 +121,6 @@ public class LoginFrame extends JFrame implements ActionListener {
                         dispose();
                         new Doctor();
                     }
-
                 } else if (Identitynurse.isSelected()) {
                     System.out.println("Selected Option 2");
                     nurse = new Nurse();
@@ -132,7 +130,6 @@ public class LoginFrame extends JFrame implements ActionListener {
                         dispose();
                         new Nurse();
                     }
-
                 } else if (Identityadmin.isSelected()) {
                     System.out.println("Selected Option 3");
                     Admin admin = new Admin();
@@ -141,21 +138,18 @@ public class LoginFrame extends JFrame implements ActionListener {
                     if (us.AdminRight(admin)) {
                         dispose();
                         new Warehousekeeper();
-                    } else   {
+                    } else {
                         JOptionPane.showMessageDialog(this, "工号或密码错误", "错误", JOptionPane.ERROR_MESSAGE);
-
                     }
-
                 }
             }
-        }
-            else if (e.getSource() == CancelButton) {
+        } else if (e.getSource() == CancelButton) {
             System.exit(0);
         }
     }
 
     public static void main(String[] s) {
-        LoginFrame frame = new LoginFrame();
+        LoginUI frame = new LoginUI();
         frame.setVisible(true);
     }
 }
