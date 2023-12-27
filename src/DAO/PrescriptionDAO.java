@@ -1,6 +1,7 @@
 package DAO;
 import java.util.Date;
 
+import Entity.PID;
 import Entity.Prescription;
 import Util.DBUtil;
 
@@ -116,20 +117,74 @@ public class PrescriptionDAO {
         return prescriptions;
     }
 
+    //传入一个boolean类型，得到处理（true）的药品信息，未处理（false）药品信息
+    public static Prescription[] getPrescriptions(boolean Pstate) {
+        Prescription[] prescriptions = null;
+        try {
+            // 建立连接
+            Connection connection = DBUtil.getConnection();
+            String query = "SELECT * FROM Prescription where Pstate=?";
+            // 创建带有可滚动结果集的预编译语句
+            PreparedStatement preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            preparedStatement.setBoolean(1, Pstate);
+            // 执行查询
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // 获取结果集中的行数
+            if (resultSet.last()) {
+                int rowCount = resultSet.getRow();
+                resultSet.beforeFirst();
+
+                // 创建处方数组
+                prescriptions = new Prescription[rowCount];
+                int index = 0;
+
+                // 遍历结果集并填充数组
+                while (resultSet.next()) {
+                    Prescription prescription = new Prescription();
+                    prescription.Pno = resultSet.getInt("Pno");
+                    prescription.Pid = resultSet.getString("Pid");
+                    prescription.Dno = resultSet.getString("Dno");
+                    prescription.Ptime = resultSet.getDate("Ptime");
+                    prescription.Nno = resultSet.getString("Nno");
+                    prescription.Htime = resultSet.getDate("Htime");
+                    prescription.Pstate = resultSet.getBoolean("Pstate");
+                    prescriptions[index] = prescription;
+                    index++;
+                }
+            }
+
+            // 关闭连接
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return prescriptions;
+    }
+
     // 测试方法
     public static void main(String[] args) {
-        Prescription p = new Prescription();
-        p.Pno = 1;
-        p.Pid = "patient1";
-        p.Dno = "doctor1";
-        p.Ptime = new Date();
-        p.Nno = "nurse1";
-        p.Htime = new Date();
-        p.Pstate = true;
-
-        System.out.println(PrescriptionDAO.insertPrescription(p));
-        System.out.println(PrescriptionDAO.getAllPrescriptions()[0]);
+//        Prescription p = new Prescription();
+//        p.Pno = 1;
+//        p.Pid = "patient1";
+//        p.Dno = "doctor1";
+//        p.Ptime = new Date();
+//        p.Nno = "nurse1";
+//        p.Htime = new Date();
+//        p.Pstate = true;
+//
+//        System.out.println(PrescriptionDAO.insertPrescription(p));
+//        System.out.println(PrescriptionDAO.getAllPrescriptions()[0]);
 //        System.out.println(PrescriptionDAO.updatePrescription(1, "patient2", "doctor2", new Date(), "nurse2", new Date(), false));
 //        System.out.println(PrescriptionDAO.deletePrescription(1));
+        Prescription[] prescriptions = PrescriptionDAO.getPrescriptions(false);
+
+        for (Prescription p : prescriptions) {
+            System.out.println("Pno: " + p.Pno + ", Pid: " + p.Pid + ", Dno: " + p.Dno);
+        }
+
     }
 }
