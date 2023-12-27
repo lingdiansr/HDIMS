@@ -4,8 +4,8 @@ import DAO.SupplierDAO;
 import Util.DBUtil;
 
 public class AdminService {
-    public Supplier[] allSupplier(){
-        return SupplierDAO.selectAllSuppliers();
+    public Object[][] allSupplier(){
+        return DBUtil.convertTo2DArray(SupplierDAO.selectAllSuppliers());
     }
     public Object[][] search(String text){
 //        return SupplierDAO.fuzzySelectBy(text);
