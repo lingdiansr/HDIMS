@@ -8,4 +8,7 @@ public class DoctorService {
         Drug[] resultDrug=DrugDAO.getAllDrug();
         return DBUtil.convertTo2DArray(resultDrug);
     }
+    public Object[][] Search(String text){
+        return DBUtil.convertTo2DArray(DrugDAO.fuzzySelectBy(text));
+    }
 }
