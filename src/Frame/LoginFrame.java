@@ -14,15 +14,15 @@ import java.util.IdentityHashMap;
 public class LoginFrame extends JFrame implements ActionListener {
 
 //使用复选框进行身份选择
-    JLabel IdentityLable = new JLabel("  身   份:");
+    JLabel IdentityLable = new JLabel("  身 份:");
     JCheckBox Identityadmin = new JCheckBox("仓库管理员");
     JCheckBox Identitynurse = new JCheckBox("护士");
     JCheckBox Identitydoctor = new JCheckBox("医生");
 
-    JLabel UsernameLable = new JLabel("用 户 名:");
+    JLabel UsernameLable = new JLabel(" 工 号:");
     JTextField UsernameField = new JTextField();
 
-    JLabel PasswordLable = new JLabel(" 密　 码:");
+    JLabel PasswordLable = new JLabel(" 密 码:");
     JPasswordField PasswordField = new JPasswordField();
 
     JButton SureButton = new JButton("确定");
@@ -106,38 +106,50 @@ public class LoginFrame extends JFrame implements ActionListener {
         String password = new String(PasswordField.getPassword());
 
         if (e.getSource() == SureButton) {
-            UserService us = new UserService();
-            if (Identitydoctor.isSelected()) {
-                System.out.println("Selected Option 1");
-                Doctor doctor = new Doctor();
-                doctor.setDno(id);
-                doctor.setDpwd(password);
-                if (us.DoctorRight(doctor)) {
-                    dispose();
-                    new Doctor();
-                }
+            if (id.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "请正确输入用户名和密码", "错误", JOptionPane.ERROR_MESSAGE);
+            } else {
 
-            } else if (Identitynurse.isSelected()) {
-                System.out.println("Selected Option 2");
-                Nurse nurse = new Nurse();
-                nurse.setNno(id);
-                nurse.setNpwd(password);
-                if (us.NurseRight(nurse)) {
-                    dispose();
-                    new Nurse();
-                }
+                UserService us = new UserService();
+                Nurse nurse = null;
+                Doctor doctor = null;
+                if (Identitydoctor.isSelected()) {
+                    System.out.println("Selected Option 1");
+                    doctor = new Doctor();
+                    doctor.setDno(id);
+                    doctor.setDpwd(password);
+                    if (us.DoctorRight(doctor)) {
+                        dispose();
+                        new Doctor();
+                    }
 
-            } else if (Identityadmin.isSelected()) {
-                System.out.println("Selected Option 3");
-                Admin admin = new Admin();
-                admin.setAno(id);
-                admin.setApwd(password);
-                if (us.AdminRight(admin)) {
-                    dispose();
-                    new Warehousekeeper();
+                } else if (Identitynurse.isSelected()) {
+                    System.out.println("Selected Option 2");
+                    nurse = new Nurse();
+                    nurse.setNno(id);
+                    nurse.setNpwd(password);
+                    if (us.NurseRight(nurse)) {
+                        dispose();
+                        new Nurse();
+                    }
+
+                } else if (Identityadmin.isSelected()) {
+                    System.out.println("Selected Option 3");
+                    Admin admin = new Admin();
+                    admin.setAno(id);
+                    admin.setApwd(password);
+                    if (us.AdminRight(admin)) {
+                        dispose();
+                        new Warehousekeeper();
+                    } else   {
+                        JOptionPane.showMessageDialog(this, "工号或密码错误", "错误", JOptionPane.ERROR_MESSAGE);
+
+                    }
+
                 }
             }
-        } else if (e.getSource() == CancelButton) {
+        }
+            else if (e.getSource() == CancelButton) {
             System.exit(0);
         }
     }
