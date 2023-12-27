@@ -1,60 +1,68 @@
 package Frame;
+
 import DAO.AdminDAO;
 import Service.UserService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.IdentityHashMap;
 
-//任务一：还有一个进度条没实现JProgressbar
-//任务二：想加入一个背景图片书上262页似乎可以实现
-//任务三：监听器由于其他界面没实现，只有模子
 public class LoginFrame extends JFrame implements ActionListener {
 
-    //三个标签：身份选择，用户名，密码
-    JLabel IdentityLable = new JLabel("身份");
+//使用复选框进行身份选择
+    JLabel IdentityLable = new JLabel("  身   份:");
+    JCheckBox Identityadmin = new JCheckBox("仓库管理员");
+    JCheckBox Identitynurse = new JCheckBox("护士");
+    JCheckBox Identitydoctor = new JCheckBox("医生");
 
-    JComboBox<String> IdentityCombox = new JComboBox<>();
-    JLabel  UsernameLable= new JLabel("用户名");
+    JLabel UsernameLable = new JLabel("用 户 名:");
     JTextField UsernameField = new JTextField();
-    JLabel  PasswordLable= new JLabel("密码");
-    JTextField PasswordField = new JTextField();
-    //以下是两个按钮：确定，取消
+
+    JLabel PasswordLable = new JLabel(" 密　 码:");
+    JPasswordField PasswordField = new JPasswordField();
+
     JButton SureButton = new JButton("确定");
-    JButton CancelButton =new JButton("取消");
-    //以下是几个中间容器
+    JButton CancelButton = new JButton("取消");
+
     JPanel IdentityPannel = new JPanel();
     JPanel UsernamePannel = new JPanel();
     JPanel PasswordPannel = new JPanel();
     JPanel ButtonPannel = new JPanel();
-    public LoginFrame(){
 
-        IdentityCombox.addItem("患者");
-        IdentityCombox.addItem("医生");
-        IdentityCombox.addItem("护士");
-        IdentityCombox.addItem("仓库管理员");
+    public LoginFrame() {
+
+        //将三个身份的复选框逐个放进一个按钮里，同时使用一个对象来控制身份的选择，每次只能选择一个
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(Identityadmin);
+        buttonGroup.add(Identitynurse);
+        buttonGroup.add(Identitydoctor);
 
         this.setTitle("药物管理系统登录界面");
         this.setSize(800, 600);
-        this.setLayout(new GridLayout(6, 1));
+        this.setLayout(new GridLayout(6, 2));
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
-
 
         UsernameField.setColumns(19);
         PasswordField.setColumns(20);
 
         IdentityPannel.add(IdentityLable);
-        IdentityPannel.add(IdentityCombox);
+        IdentityPannel.add(Identityadmin);
+        IdentityPannel.add(Identitynurse);
+        IdentityPannel.add(Identitydoctor);
 
         UsernamePannel.add(UsernameLable);
         UsernamePannel.add(UsernameField);
 
         PasswordPannel.add(PasswordLable);
         PasswordPannel.add(PasswordField);
-
+        //使用空Label来调整按钮间的间距
         ButtonPannel.add(SureButton);
+        ButtonPannel.add(new JLabel("    "));
+        ButtonPannel.add(new JLabel("    "));
+        ButtonPannel.add(new JLabel("    "));
         ButtonPannel.add(CancelButton);
 
         this.add(new JPanel());
@@ -66,47 +74,58 @@ public class LoginFrame extends JFrame implements ActionListener {
 
         SureButton.addActionListener(this);
         CancelButton.addActionListener(this);
-        IdentityCombox.addActionListener(this);
+        Identityadmin.addActionListener(this);
+        Identitynurse.addActionListener(this);
+        Identitydoctor.addActionListener(this);
+        //设置字体大小
+        Font font = new Font("微软雅黑", Font.PLAIN, 40);
+        Font font1 = new Font("微软雅黑", Font.PLAIN, 36);
+        Identityadmin.setFont(font1);
+        Identitynurse.setFont(font1);
+        Identitydoctor.setFont(font1);
+        IdentityLable.setFont(font);
+        UsernameLable.setFont(font);
+        PasswordLable.setFont(font);
+        UsernameField.setFont(font);
+        PasswordField.setFont(font);
+        UsernameField.setColumns(10);
+        PasswordField.setColumns(10);
+        SureButton.setFont(font);
+        SureButton.setFocusPainted(false);
+
+        CancelButton.setFocusPainted(false);
+        CancelButton.setFont(font);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String selectedValue = null;
-
+        String id = UsernameField.getText();
+        String password = new String(PasswordField.getPassword());
 
         if (e.getSource() == SureButton) {
-            UserService us =new UserService();
-            //打开另一个界面
-            //有三个打开哪个,再做一次判断
-            selectedValue = (String) IdentityCombox.getSelectedItem();
-            if (selectedValue.equals("患者")) {
-                JOptionPane.showMessageDialog(null, "你打开了患者界面（目前没实现）");
+            UserService us = new UserService();
+            if (Identitydoctor.isSelected()) {
+                System.out.println("Selected Option 1");
+                if (us.DoctorRight(id, password)) {
+                    dispose();
+                    new Doctor();
+                }
 
-            }
-            //打开患者窗口
-            else if (selectedValue.equals("医生")) {
+            } else if (Identitynurse.isSelected()) {
                 System.out.println("Selected Option 2");
-
-            } else if (selectedValue.equals("护士")) {
-                System.out.println("Selected Option 3");
-                if(us.NurseRight(UsernameField.getText(), PasswordField.getText())){
+                if (us.NurseRight(id, password)) {
                     dispose();
                     new Nurse();
                 }
 
-
-            } else if (selectedValue.equals("仓库管理员")) {
-                System.out.println("Selected Option 4");
-
-                if(us.AdminRight(UsernameField.getText(), PasswordField.getText())){
+            } else if (Identityadmin.isSelected()) {
+                System.out.println("Selected Option 3");
+                if (us.AdminRight(id, password)) {
                     dispose();
                     new Warehousekeeper();
                 }
-
-
-
             }
-        } else if (e.getSource() == CancelButton) {//点取消退出系统
+        } else if (e.getSource() == CancelButton) {
             System.exit(0);
         }
     }
@@ -115,5 +134,4 @@ public class LoginFrame extends JFrame implements ActionListener {
         LoginFrame frame = new LoginFrame();
         frame.setVisible(true);
     }
-
 }
