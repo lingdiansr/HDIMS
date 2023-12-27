@@ -1,6 +1,8 @@
 package Service;
 import Entity.Supplier;
 import DAO.SupplierDAO;
+import Util.DBUtil;
+
 public class AdminService {
     public Supplier[] allSupplier(){
         return SupplierDAO.selectAllSuppliers();
@@ -13,14 +15,7 @@ public class AdminService {
 //        }
 //        return ss;
         Supplier[] searchResult = SupplierDAO.fuzzySelectBy(text);
-        Object[][] data = new Object[searchResult.length][4];
-        for (int i = 0; i < searchResult.length; i++) {
-            data[i][0] = searchResult[i].getSno();
-            data[i][1] = searchResult[i].getSname();
-            data[i][2] = searchResult[i].getSaddr();
-            data[i][3] = searchResult[i].getSphone();
-        }
-        return data;
+        return DBUtil.convertTo2DArray(searchResult);
     }
 
     public static void main(String[] args) {
