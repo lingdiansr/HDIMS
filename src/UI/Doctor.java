@@ -17,7 +17,7 @@ public class Doctor extends JFrame implements ActionListener {
     //-------------------------------------------------------------------------------
     //已开处方工具条
     JToolBar HavegivedMedicationToolbar = new JToolBar("");
-
+    JPanel HavegivedMedicationPanel = new JPanel(); // 新增一个中间容器
 
     //搜索组件
     JPanel Seacherpannel = new JPanel();
@@ -35,6 +35,8 @@ public class Doctor extends JFrame implements ActionListener {
 
     MyTableModel2 freeTableModel = new MyTableModel2();
     JTable freeTable = new JTable(freeTableModel);
+    MyTableModel3 HavegivedMedicationModel = new MyTableModel3();
+    JTable HaveTable = new JTable(HavegivedMedicationModel);
     JButton CreatMedicationButton = new JButton("生成药单");
     public Doctor() {
         this.setTitle("医生界面");
@@ -44,36 +46,29 @@ public class Doctor extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(ButtonPane, BorderLayout.CENTER);
 
-        //药表
+        //开处方界面药表
         GiveMedicationTable.setPreferredScrollableViewportSize(new Dimension(700, 100));
         freeTable.setPreferredScrollableViewportSize(new Dimension(700, 100));
+        HaveTable.setPreferredScrollableViewportSize(new Dimension(700, 100));
 
+        //开处方界面的工具条布局
         GiveMedicationToolbar.setLayout(new BoxLayout(GiveMedicationToolbar, BoxLayout.Y_AXIS));
-        HavegivedMedicationToolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+        //已开处方界面的工具条布局
+        HavegivedMedicationToolbar.setLayout(new BoxLayout(HavegivedMedicationToolbar, BoxLayout.Y_AXIS));
 
 
-
-
-
-        //将药单标签加入中间容器，中间容器还没放到大框架里面，要新开一个布局的中间容器，放到搜索下面（包括搜索）
-        //HaveSelectedMedicationPannel.add(HaveSelectedMedicationLable);
-
-        //将按钮加入已开处方工具条
-
-
-        ButtonPane.addTab("已开处方", null, HavegivedMedicationToolbar);
-
-        //搜索组件放入中间容器，放到工具条里才对,我之前都放在公共了！
+        //开处方界面搜索组件放入中间容器，放到工具条里才对,我之前都放在公共了！
         SearcherField.setColumns(19);
         Seacherpannel.add(SearcherLable);
         Seacherpannel.add(SearcherField);
         Seacherpannel.add(SureButton);
         Seacherpannel.add(ADDMedicationButton);
         Seacherpannel.setPreferredSize(new Dimension(400, 30));
-
+        //按钮响应实现
         SureButton.addActionListener(this);
         ADDMedicationButton.addActionListener(this);
         CreatMedicationButton.addActionListener(this);
+
         LT.setLayout(new BorderLayout());
         LT.add(MedicationListLable, "North");
         LT.add(freeTable, "Center");
@@ -83,15 +78,19 @@ public class Doctor extends JFrame implements ActionListener {
         GiveMedicationToolbar.add(GiveMedicationPanel, "North");
         GiveMedicationToolbar.add(Seacherpannel, "Center");
         GiveMedicationToolbar.add(LT, "South");
+        //已开处方中间容器加入工具条中(表格放入滚动容器，滚动容器放入中间容器，中间容器放入工具条)
+        JScrollPane scrollPane3 = new JScrollPane(HaveTable);
+        HavegivedMedicationPanel.add(scrollPane3);
+        HavegivedMedicationToolbar.add(HavegivedMedicationPanel);
 
         JScrollPane scrollPane = new JScrollPane(GiveMedicationTable);
         JScrollPane scrollPane2 = new JScrollPane(freeTable);
+
+
         GiveMedicationPanel.add(scrollPane);
         LT.add(scrollPane2);
 
-
-
-        //将工具条加入总体的标签面板
+        //将两个工具条加入总体的标签面板
         ButtonPane.addTab("开处方", null, GiveMedicationToolbar);
         ButtonPane.addTab("已开处方", null, HavegivedMedicationToolbar);
         this.add(ButtonPane);
@@ -182,6 +181,52 @@ public class Doctor extends JFrame implements ActionListener {
 
     }
 
+    class MyTableModel3 extends AbstractTableModel {
+        final String[] columnNames = {"药名", "数量", "服用方法"};
+        final Object[][] data = {
+                {"", "", ""},
+                {"", "", ""},
+                {"", "", ""}
+        };
+
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        public int getRowCount() {
+            return data.length;
+        }
+
+        public String getColumnName(int col) { // 修改这个方法名称
+            return columnNames[col];
+        }
+
+        public Object getValueAt(int row, int col) {
+            return data[row][col];
+        }
+
+        public void setValueAt(Object value, int row, int col) {
+            data[row][col] = value;
+            fireTableCellUpdated(row, col);
+        }
+
+        public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
+        }
+
+        public void resetRowCount() {
+            for (int row = 0; row < data.length; row++) {
+                data[row][0] = ""; // 或 data[row][0] = null;
+            }
+            fireTableDataChanged();
+        }
+
+        public boolean isCellEditable(int row, int col) {
+            return true; // 设置所有单元格都可编辑
+        }
+
+    }
+
 
     @Override//为了避免取消后还在表格中的问题，用到每次更新前清除的思想
     public void actionPerformed(ActionEvent event) {
@@ -194,15 +239,28 @@ public class Doctor extends JFrame implements ActionListener {
                 boolean isSelected = (boolean) GiveMedicationTable.getValueAt(row, selectedColumn);
                 if (isSelected) { // 如果药物被选中
                     String medicationName = (String) GiveMedicationTable.getValueAt(row, 0); // 获取药品名
-                    freeTableModel.setValueAt(medicationName, k, 0); // 更新对应行的药品名单元格的值,应该不是对应行数
+                    freeTableModel.setValueAt(medicationName, k, 0); // 更新药品名单元格
                     k++;
                 }
             }
             JOptionPane.showMessageDialog(null, "已添加");
         } else if (event.getSource() == CreatMedicationButton) {
-            JOptionPane.showMessageDialog(null, "处方创建成功！请去已开处方查看");
+            // 在已开处方工具条中添加药物数据的逻辑
+            int rowCount = freeTableModel.getRowCount();
+            for (int row = 0; row < rowCount; row++) {
+                String medicationName = (String) freeTableModel.getValueAt(row, 0);
+                String quantity = (String) freeTableModel.getValueAt(row, 1);
+                String usage = (String) freeTableModel.getValueAt(row, 2);
+                // 在这里将药物数据添加到已开处方工具条的表格中
+                HavegivedMedicationModel.setValueAt(medicationName, row, 0);
+                HavegivedMedicationModel.setValueAt(quantity, row, 1);
+                HavegivedMedicationModel.setValueAt(usage, row, 2);
+            }
+            // 通知已开处方工具条的表格模型更新数据
+            JOptionPane.showMessageDialog(null, "药单创建成功！请去已开处方查看");
         }
     }
+
 
 
     public static void main(String[] args) {
