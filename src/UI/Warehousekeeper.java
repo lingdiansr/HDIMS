@@ -3,6 +3,7 @@ package UI;
 import Service.AdminService;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -115,7 +116,11 @@ public class Warehousekeeper extends JFrame implements ActionListener {
         {
             String searchtext =SearcherField.getText();
             AdminService as = new AdminService();
-            as.search(searchtext);
+            Object[][] searchResult= as.search(searchtext);
+            String[] columnNames = {"Sno", "Sname", "Saddr", "Sphone"};
+
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            model.setDataVector(searchResult, columnNames);
         }
     }
 }
