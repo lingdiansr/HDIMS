@@ -2,8 +2,10 @@ package Service;
 
 
 import DAO.AdminDAO;
+import DAO.DoctorDAO;
 import DAO.NurseDAO;
 import Entity.Admin;
+import Entity.Doctor;
 import Entity.Nurse;
 
 public class UserService {
@@ -31,5 +33,17 @@ public class UserService {
         }
 
     }
+    public boolean DoctorRight(String Dno,String Dpwd){
+        //数据访问层的方法,获取医生输入的编号，和密码，数据库存在信息则返回true
+        DoctorDAO doctorDAO = new DoctorDAO();
+        Doctor doctor = DoctorDAO.selectByDno(Dno);
+        if (doctor.getDno() !=null && Dpwd.equals(doctor.getDpwd().trim())){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
 }
 
