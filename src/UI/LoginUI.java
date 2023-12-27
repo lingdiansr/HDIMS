@@ -1,6 +1,5 @@
-package Frame;
+package UI;
 
-import DAO.AdminDAO;
 import Entity.Admin;
 import Entity.Nurse;
 import Entity.Doctor;
@@ -9,9 +8,8 @@ import Service.UserService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.IdentityHashMap;
 
-public class LoginFrame extends JFrame implements ActionListener {
+public class LoginUI extends JFrame implements ActionListener {
 
     // 使用复选框进行身份选择
     JLabel IdentityLable = new JLabel("  身 份:");
@@ -33,7 +31,7 @@ public class LoginFrame extends JFrame implements ActionListener {
     JPanel PasswordPannel = new JPanel();
     JPanel ButtonPannel = new JPanel();
 
-    public LoginFrame() {
+    public LoginUI() {
 
         // 将三个身份的复选框逐个放进一个按钮里，同时使用一个对象来控制身份的选择，每次只能选择一个
         ButtonGroup buttonGroup = new ButtonGroup();
@@ -151,7 +149,7 @@ public class LoginFrame extends JFrame implements ActionListener {
     }
 
     public static void main(String[] s) {
-        LoginFrame frame = new LoginFrame();
+        LoginUI frame = new LoginUI();
         frame.setVisible(true);
     }
 }
