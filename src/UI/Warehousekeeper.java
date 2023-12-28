@@ -46,9 +46,9 @@ public class Warehousekeeper extends JFrame implements ActionListener {
     JButton SureButton2 = new JButton("确定");
     JButton SureButton3 = new JButton("确定");
 
-    JTable table1 = new JTable(10, 10);
-    JTable table2 = new JTable(10, 10);
-    JTable table3 = new JTable(10, 10);
+    JTable table1 = new JTable(25, 4);
+    JTable table2 = new JTable(25, 3);
+    JTable table3 = new JTable(25, 10);
 
 
     public Warehousekeeper() {
@@ -125,10 +125,18 @@ public class Warehousekeeper extends JFrame implements ActionListener {
         {
             String searchtext = SearcherField1.getText();
             AdminService as = new AdminService();
-            Object[][] searchResult= as.search(searchtext);
+            Object[][] searchResult= as.searchSupplier(searchtext);
             String[] columnNames = {"编号", "供应商名称", "供应商地址", "联系方式"};
             DefaultTableModel model = new DefaultTableModel(searchResult, columnNames);
             table1.setModel(model);
+        } else if (e.getSource()==SureButton2 && MedicationInformationToolbar.isEnabled()) {
+            System.out.println("t2");
+            String searchtext = SearcherField2.getText();
+            AdminService as = new AdminService();
+            Object[][] searchResult= as.searchDrug(searchtext);
+            String[] columnNames = {"编号", "药品名称", "保质期（天）"};
+            DefaultTableModel model = new DefaultTableModel(searchResult, columnNames);
+            table2.setModel(model);
         }
 
     }

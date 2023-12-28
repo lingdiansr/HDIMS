@@ -28,16 +28,7 @@ public class Main{
 
     public static void main(String[] args) {
         // Example usage
-        Supplier[] suppliers = new Supplier[2];
-        suppliers[0] = new Supplier("1", "Supplier 1", "Address 1", "12345");
-        suppliers[1] = new Supplier("2", "Supplier 2", "Address 2", "67890");
-
-        Object[][] convertedArray = convertTo2DArray(suppliers);
-        for (Object[] row : convertedArray) {
-            for (Object cell : row) {
-                System.out.print(cell + " ");
-            }
-            System.out.println();
-        }
+        String[] columnNames = {"PDno", "PDname", "PDlife", "PDnum", "选择"};
+        System.out.println(columnNames.length);
     }
 }
