@@ -14,7 +14,15 @@ public class DoctorService {
         for (DrugDoctor d : DrugDAO.fuzzySelectBy(text)){
             System.out.println(d);
         }
-        return DBUtil.convertTo2DArray(DrugDAO.fuzzySelectBy(text));
+//        DrugDoctor[] tt= DrugDAO.fuzzySelectBy(text);
+       return DBUtil.convertTo2DArray(DrugDAO.fuzzySelectBy(text));
+//        for (int i = 0; i < t.length; i++) {
+//            for (int j = 0; j < t[i].length; j++) {
+//                System.out.print(t[i][j] + " ");
+//            }
+//            System.out.println(); // 在每行结束时换行
+//        }
+//        return null;
     }
 
     public static void main(String[] args) {

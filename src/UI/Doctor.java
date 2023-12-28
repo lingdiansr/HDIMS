@@ -105,7 +105,7 @@ public class Doctor extends JFrame implements ActionListener {
             freeTableModel.resetRowCount();
             int k = 0;
             int rowCount = GiveMedicationTable.getRowCount();
-            int selectedColumn = 2; // 第三列索引
+            int selectedColumn = 4; // 第三列索引
             for (int row = 0; row < rowCount; row++) {
                 boolean isSelected = (boolean) GiveMedicationTable.getValueAt(row, selectedColumn);
                 if (isSelected) { // 如果药物被选中
@@ -138,6 +138,13 @@ public class Doctor extends JFrame implements ActionListener {
                 System.arraycopy(searchResult[i], 0, searchResultWithCheck[i], 0, searchResult[i].length);
                 searchResultWithCheck[i][searchResult[i].length] = false;
             }
+//            System.out.println("数组测试");
+//            for (int i = 0; i < searchResult.length; i++) {
+//                for (int j = 0; j < searchResult[i].length; j++) {
+//                    System.out.print(searchResult[i][j].toString() + " ");
+//                }
+//                System.out.println(); // 在每行结束时换行
+//            }
             myTableModel.setData(searchResultWithCheck);
         }
 
@@ -152,43 +159,45 @@ public class Doctor extends JFrame implements ActionListener {
         final String[] columnNames = {"PDno", "PDname", "PDlife", "PDnum", "选择"};
         Object[][] data = {{" ", " ", " ", 0, false} };
         final Class[] columnClasses = {String.class, String.class, String.class, Integer.class, Boolean.class};
-
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
+        @Override
         public int getRowCount() {
             return data.length;
         }
 
-        public String getColumnName(int col) {
-            return columnNames[col];
+        @Override
+        public int getColumnCount() {
+            return columnNames.length;
         }
 
-        public Object getValueAt(int row, int col) {
-            if (row < data.length && col < data[row].length) {
-                return data[row][col];
-            } else {
-                return null; // Handle the case where the row or column index is out of bounds
-            }
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+//            System.out.println("R:"+rowIndex+"C:"+columnIndex);
+            return data[rowIndex][columnIndex];
         }
 
-        public Class getColumnClass(int c) {
-            return columnClasses[c];
+        @Override
+        public String getColumnName(int column) {
+            return columnNames[column];
         }
 
-        public boolean isCellEditable(int row, int col) { // 设置编辑单元格
-            return col == 4; // 只允许编辑选择列
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            return columnClasses[columnIndex];
         }
 
-        public void setValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return true;
         }
 
+        @Override
+        public void setValueAt(Object value, int rowIndex, int columnIndex) {
+            data[rowIndex][columnIndex] = value;
+            fireTableCellUpdated(rowIndex, columnIndex);
+        }
         public void setData(Object[][] newData) {
             data = newData;
-            fireTableDataChanged(); // Notify the table model that the data has changed
+            fireTableDataChanged();
         }
     }
 

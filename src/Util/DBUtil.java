@@ -46,12 +46,27 @@ public class DBUtil {
         Class<?> clazz = objects[0].getClass();
         Field[] fields = clazz.getDeclaredFields();
 
-        Object[][] result = new Object[objects.length][fields.length];
+        // 获取父类字段
+        Class<?> superClass = clazz.getSuperclass();
+        Field[] superFields = superClass.getDeclaredFields();
+
+        Object[][] result = new Object[objects.length][fields.length + superFields.length];
         for (int i = 0; i < objects.length; i++) {
-            for (int j = 0; j < fields.length; j++) {
+            int fieldIndex = 0;
+            for (Field field : superFields) {
                 try {
-                    fields[j].setAccessible(true);
-                    result[i][j] = fields[j].get(objects[i]);
+                    field.setAccessible(true);
+                    result[i][fieldIndex] = field.get(objects[i]);
+                    fieldIndex++;
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+            for (Field field : fields) {
+                try {
+                    field.setAccessible(true);
+                    result[i][fieldIndex] = field.get(objects[i]);
+                    fieldIndex++;
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
