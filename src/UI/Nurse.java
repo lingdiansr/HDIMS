@@ -1,6 +1,7 @@
 package UI;
 
 import Service.AdminService;
+import Service.NurseService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -57,7 +58,9 @@ public class Nurse extends JFrame implements ActionListener {
         this.setLayout(new BorderLayout());
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        SureButton1.addActionListener(this);
+        SureButton2.addActionListener(this);
+        SureButton3.addActionListener(this);
 
         SupplierInformationToolbar.setLayout(new BoxLayout(SupplierInformationToolbar, BoxLayout.Y_AXIS));
         // 搜索组件
@@ -119,14 +122,15 @@ public class Nurse extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == SureButton1 && SupplierInformationToolbar.isEnabled()) {
-            String searchtext = SearcherField1.getText();
-            AdminService as = new AdminService();
-            Object[][] searchResult = as.search(searchtext);
-            String[] columnNames = {"Sno", "Sname", "Saddr", "Sphone"};
+        if (e.getSource() == SureButton2 && SupplierInformationToolbar.isEnabled()) {
+            String searchtext = SearcherField2.getText();
+            NurseService as = new NurseService();
+            Object[][] searchResult = as.searchInventory(searchtext);
+            String[] columnNames = {"药品编号", "批次", "数量", "供应商编号","入库管理员编号","入库时间"};
 
-            DefaultTableModel model = (DefaultTableModel) table1.getModel();
+            DefaultTableModel model = (DefaultTableModel) table2.getModel();
             model.setDataVector(searchResult, columnNames);
+
         }
     }
 }

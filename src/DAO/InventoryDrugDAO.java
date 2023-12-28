@@ -121,4 +121,49 @@ public class InventoryDrugDAO {
 //                System.out.println(InventoryDrugDAO.getallInventoryDrug()[0]);
 //                //System.out.print(inventoryDrugs[1]);
    }
+    public static InventoryDrug[] fuzzySelectBy(String text) {
+        InventoryDrug[] inventoryDrugs = null;
+        try {
+            // 建立连接
+            Connection connection = DBUtil.getConnection();
+            String query = "SELECT * FROM InventoryDrug WHERE PDno LIKE N'%"+text+"%' OR PDbatch LIKE N'%"+text+"%' OR PDnum LIKE N'%"+text+"%' OR Sno LIKE N'%"+text+"%'OR SAno LIKE N'%"+text+"%'OR Stime LIKE N'%"+text+"%'";
+            // 创建一个具有可滚动结果集的prepareStatement
+            PreparedStatement preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            // 执行查询
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // 获取结果集中的行数
+            if (resultSet.last()) {
+                int rowCount = resultSet.getRow();
+                resultSet.beforeFirst();
+
+                // 创建一个Supplier数组
+                inventoryDrugs = new InventoryDrug[rowCount];
+                int index = 0;
+
+                // 遍历结果集并填充数组
+                while (resultSet.next()) {
+                    InventoryDrug inventoryDrug = new InventoryDrug();
+                    inventoryDrug.PDno = resultSet.getString("PDno");
+                    inventoryDrug.PDbatch = resultSet.getDate("PDbatch");
+                    inventoryDrug.PDnum = resultSet.getInt("PDnum");
+                    inventoryDrug.Sno = resultSet.getString("Sno");
+                    inventoryDrug.SAno = resultSet.getString("SAno");
+                    inventoryDrug.Stime = resultSet.getDate("Stime");
+                    inventoryDrugs[index] = inventoryDrug;
+                    index++;
+                }
+            }
+
+            // 关闭连接
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return inventoryDrugs;
+    }
 }

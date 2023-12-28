@@ -4,29 +4,31 @@ import DAO.DrugDAO;
 import DAO.InventoryDrugDAO;
 import DAO.PrescriptionDAO;
 import DAO.SupplierDAO;
-import Entity.Drug;
-import Entity.InventoryDrug;
-import Entity.Prescription;
-import Entity.Supplier;
+import Entity.*;
 import Util.DBUtil;
 
 import java.util.Date;
 
 public class NurseService {
-    //已处理处方的数组
+
+    public Object[][] allPrescription(){ //所有处方
+        Prescription[] allprescription = PrescriptionDAO.getAllPrescriptions();
+        return DBUtil.convertTo2DArray(allprescription);
+    }
+
 //    public Prescription[] Tprescription(){
 //        return PrescriptionDAO.getPrescriptions(true);
 //    }
-    public Object[][] Tprescription(){
+    public Object[][] Tprescription(){ //已处理处方的数组
         Prescription[] tprescriptions= PrescriptionDAO.getPrescriptions(true);
         return DBUtil.convertTo2DArray(tprescriptions);
     }
 
-    //未处理处方,还为处理所以不需要处理时间
+
 //    public Prescription[] Fprescription(){
 //        return PrescriptionDAO.getPrescriptions(false);
 //    }
-    public Object[][] Fprescription(){
+    public Object[][] Fprescription(){ //未处理处方,
         Prescription[] tprescriptions= PrescriptionDAO.getPrescriptions(false);
         return DBUtil.convertTo2DArray(tprescriptions);
     }
@@ -38,9 +40,17 @@ public class NurseService {
         return DBUtil.convertTo2DArray(inventoryDrugs);
     }
 
-//处理药品,
+//处理处方
     public boolean handleInventoryDRug(int Pno){
+
         return PrescriptionDAO.updatePrescriptionPstate(Pno,new Date());
+    }
+    public Object[][] searchInventory(String text) {
+//        for (DrugDoctor d : DrugDAO.fuzzySelectBy(text)) {
+//            System.out.println(d);
+//        }
+        InventoryDrug[] inventoryDrugs = InventoryDrugDAO.fuzzySelectBy(text);
+        return DBUtil.convertTo2DArray(inventoryDrugs);
     }
     public static void main(String[] args){
         NurseService nurseService=new NurseService();
