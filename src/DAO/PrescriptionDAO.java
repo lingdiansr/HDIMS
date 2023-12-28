@@ -1,6 +1,7 @@
 package DAO;
 import java.util.Date;
 
+import Entity.InventoryDrug;
 import Entity.PID;
 import Entity.Prescription;
 import Util.DBUtil;
@@ -180,7 +181,98 @@ public class PrescriptionDAO {
         }
         return prescriptions;
     }
+    public static Prescription[] fuzzySelectBy(String text) {
+        Prescription[] prescriptions = null;
+        try {
+            // 建立连接
+            Connection connection = DBUtil.getConnection();
+            String query = "SELECT * FROM Prescription WHERE Pno LIKE N'%"+text+"%' OR Pid LIKE N'%"+text+"%' OR Dno LIKE N'%"+text+"%' OR Ptime LIKE N'%"+text+"%'OR Nno LIKE N'%"+text+"%'";
+            // 创建一个具有可滚动结果集的prepareStatement
+            PreparedStatement preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
+            // 执行查询
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // 获取结果集中的行数
+            if (resultSet.last()) {
+                int rowCount = resultSet.getRow();
+                resultSet.beforeFirst();
+
+                // 创建一个Supplier数组
+                prescriptions = new Prescription[rowCount];
+                int index = 0;
+
+                // 遍历结果集并填充数组
+                while (resultSet.next()) {
+                    Prescription prescription = new Prescription();
+                    prescription.Pno = resultSet.getInt("Pno");
+                    prescription.Pid = resultSet.getString("Pid");
+                    prescription.Dno = resultSet.getString("Dno");
+                    prescription.Ptime = resultSet.getDate("Ptime");
+                    prescription.Nno = resultSet.getString("Nno");
+                    prescription.Htime = resultSet.getDate("Htime");
+                    prescription.Pstate = resultSet.getBoolean("Pstate");
+                    prescriptions[index] = prescription;
+                    index++;
+                }
+            }
+
+            // 关闭连接
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return prescriptions;
+    }
+    public static Prescription[] fuzzySelectBy(String text,boolean Pstate) {
+        Prescription[] prescriptions = null;
+        try {
+            // 建立连接
+            Connection connection = DBUtil.getConnection();
+            String query = "SELECT * FROM Prescription WHERE (Pno LIKE N'%"+text+"%' OR Pid LIKE N'%"+text+"%' OR Dno LIKE N'%"+text+"%' OR Ptime LIKE N'%"+text+"%'OR Nno LIKE N'%"+text+"%') and Pstate =?";
+            // 创建一个具有可滚动结果集的prepareStatement
+            PreparedStatement preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            preparedStatement.setBoolean(1, Pstate);
+            // 执行查询
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // 获取结果集中的行数
+            if (resultSet.last()) {
+                int rowCount = resultSet.getRow();
+                resultSet.beforeFirst();
+
+                // 创建一个Supplier数组
+                prescriptions = new Prescription[rowCount];
+                int index = 0;
+
+                // 遍历结果集并填充数组
+                while (resultSet.next()) {
+                    Prescription prescription = new Prescription();
+                    prescription.Pno = resultSet.getInt("Pno");
+                    prescription.Pid = resultSet.getString("Pid");
+                    prescription.Dno = resultSet.getString("Dno");
+                    prescription.Ptime = resultSet.getDate("Ptime");
+                    prescription.Nno = resultSet.getString("Nno");
+                    prescription.Htime = resultSet.getDate("Htime");
+                    prescription.Pstate = resultSet.getBoolean("Pstate");
+                    prescriptions[index] = prescription;
+                    index++;
+                }
+            }
+
+            // 关闭连接
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return prescriptions;
+    }
 
     // 测试方法
     public static void main(String[] args) {

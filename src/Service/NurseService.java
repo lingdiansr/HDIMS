@@ -52,6 +52,14 @@ public class NurseService {
         InventoryDrug[] inventoryDrugs = InventoryDrugDAO.fuzzySelectBy(text);
         return DBUtil.convertTo2DArray(inventoryDrugs);
     }
+    public Object[][] searchPrescription(String text) {
+        Prescription[] prescriptions = PrescriptionDAO.fuzzySelectBy(text);
+        return DBUtil.convertTo2DArray(prescriptions);
+    }
+    public Object[][] searchPrescription(String text,boolean Pstate) {
+        Prescription[] prescriptions = PrescriptionDAO.fuzzySelectBy(text,Pstate);
+        return DBUtil.convertTo2DArray(prescriptions);
+    }
     public static void main(String[] args){
         NurseService nurseService=new NurseService();
        Object[][] object = nurseService.Tprescription();

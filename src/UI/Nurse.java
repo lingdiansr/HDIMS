@@ -51,7 +51,7 @@ public class Nurse extends JFrame implements ActionListener {
     JTable table2 = new JTable(10, 10);
     JTable table3 = new JTable(10, 10);
 
-
+    NurseService as = new NurseService();
     public Nurse() {
         this.setTitle("护士界面");
         this.setSize(800, 600);
@@ -109,9 +109,12 @@ public class Nurse extends JFrame implements ActionListener {
         ButtonPane.addTab("查看库存", null, MedicationInformationToolbar);
         ButtonPane.addTab("查看未处理处方", null, TimeInformationToolbar);
 
+
         // 设置工具条在顶部
         this.add(ButtonPane, BorderLayout.CENTER);//没有其他了，直接填满
         this.setVisible(true);
+
+
     }
 
 
@@ -122,16 +125,33 @@ public class Nurse extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == SureButton2 && SupplierInformationToolbar.isEnabled()) {
+        if (e.getSource() == SureButton1 && SupplierInformationToolbar.isEnabled()) {
+            String searchtext = SearcherField1.getText();
+           // NurseService as = new NurseService();
+            Object[][] searchResult = as.searchPrescription(searchtext);
+            String[] columnNames = {"处方编号", "病人身份证", "开出医生", "开出时间","处理护士编号","处理时间","状态"};
+
+            DefaultTableModel model = (DefaultTableModel) table1.getModel();
+            model.setDataVector(searchResult, columnNames);
+
+        }else if (e.getSource() == SureButton2 && SupplierInformationToolbar.isEnabled()) {
             String searchtext = SearcherField2.getText();
-            NurseService as = new NurseService();
+            //NurseService as = new NurseService();
             Object[][] searchResult = as.searchInventory(searchtext);
             String[] columnNames = {"药品编号", "批次", "数量", "供应商编号","入库管理员编号","入库时间"};
-
             DefaultTableModel model = (DefaultTableModel) table2.getModel();
             model.setDataVector(searchResult, columnNames);
 
+        }else if (e.getSource() == SureButton3 && SupplierInformationToolbar.isEnabled()) {
+            String searchtext = SearcherField3.getText();
+            //NurseService as = new NurseService();
+            Object[][] searchResult = as.searchPrescription(searchtext,false);
+            String[] columnNames = {"处方编号", "病人身份证", "开出医生", "开出时间","处理护士编号","处理时间","状态"};
+            DefaultTableModel model = (DefaultTableModel) table3.getModel();
+            model.setDataVector(searchResult, columnNames);
+
         }
+
     }
 }
 
