@@ -1,4 +1,6 @@
 package Util;
+import Entity.Supplier;
+
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -74,7 +76,19 @@ public class DBUtil {
         }
         return result;
     }
+    public static Supplier[] convertToSupplierArray(Object[][] data) {
+        Supplier[] suppliers = new Supplier[data.length];
 
+        for (int i = 0; i < data.length; i++) {
+            suppliers[i] = new Supplier();
+            suppliers[i].Sno = (String) data[i][0];
+            suppliers[i].Sname = (String) data[i][1];
+            suppliers[i].Saddr = (String) data[i][2];
+            suppliers[i].Sphone = (String) data[i][3];
+        }
+
+        return suppliers;
+    }
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         Connection con = DBUtil.getConnection();
