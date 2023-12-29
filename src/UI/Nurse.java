@@ -4,10 +4,13 @@ import Service.AdminService;
 import Service.NurseService;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class Nurse extends JFrame implements ActionListener {
@@ -20,12 +23,12 @@ public class Nurse extends JFrame implements ActionListener {
 
 
     //药品信息工具条
-    JToolBar MedicationInformationToolbar = new JToolBar("查看处方");
+    JToolBar MedicationInformationToolbar = new JToolBar("查看未处理处方");
 
     JPanel MedicationInformationPanel = new JPanel();
 
     //时间信息工具条
-    JToolBar TimeInformationToolbar = new JToolBar("查看未处理处方");
+    JToolBar TimeInformationToolbar = new JToolBar("查看已处理的处方");
 
     JPanel TimeInformationPanel = new JPanel();
     //标签页面
@@ -61,6 +64,7 @@ public class Nurse extends JFrame implements ActionListener {
         SureButton1.addActionListener(this);
         SureButton2.addActionListener(this);
         SureButton3.addActionListener(this);
+
 
         SupplierInformationToolbar.setLayout(new BoxLayout(SupplierInformationToolbar, BoxLayout.Y_AXIS));
         // 搜索组件
@@ -105,9 +109,9 @@ public class Nurse extends JFrame implements ActionListener {
         TimeInformationToolbar.add(TimeInformationPanel);
 
         // 三个工具条加入标签面板
-        ButtonPane.addTab("查看处方", null, SupplierInformationToolbar);
+        ButtonPane.addTab("查看未处理的处方", null, SupplierInformationToolbar);
         ButtonPane.addTab("查看库存", null, MedicationInformationToolbar);
-        ButtonPane.addTab("查看未处理处方", null, TimeInformationToolbar);
+        ButtonPane.addTab("查看已处理的处方", null, TimeInformationToolbar);
 
 
         // 设置工具条在顶部
@@ -123,15 +127,18 @@ public class Nurse extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == SureButton1 && SupplierInformationToolbar.isEnabled()) {
-            String searchtext = SearcherField1.getText();
+        if (e.getSource() == SureButton3 && SupplierInformationToolbar.isEnabled()) {
+            String searchtext = SearcherField3.getText();
            // NurseService as = new NurseService();
-            Object[][] searchResult = as.searchPrescription(searchtext);
+            Object[][] searchResult = as.searchPrescription(searchtext,true);
             String[] columnNames = {"处方编号", "病人身份证", "开出医生", "开出时间","处理护士编号","处理时间","状态"};
 
-            DefaultTableModel model = (DefaultTableModel) table1.getModel();
+
+            DefaultTableModel model = (DefaultTableModel) table3.getModel();
             model.setDataVector(searchResult, columnNames);
 
         }else if (e.getSource() == SureButton2 && SupplierInformationToolbar.isEnabled()) {
@@ -142,12 +149,12 @@ public class Nurse extends JFrame implements ActionListener {
             DefaultTableModel model = (DefaultTableModel) table2.getModel();
             model.setDataVector(searchResult, columnNames);
 
-        }else if (e.getSource() == SureButton3 && SupplierInformationToolbar.isEnabled()) {
-            String searchtext = SearcherField3.getText();
+        }else if (e.getSource() == SureButton1 && SupplierInformationToolbar.isEnabled()) {
+            String searchtext = SearcherField1.getText();
             //NurseService as = new NurseService();
             Object[][] searchResult = as.searchPrescription(searchtext,false);
             String[] columnNames = {"处方编号", "病人身份证", "开出医生", "开出时间","处理护士编号","处理时间","状态"};
-            DefaultTableModel model = (DefaultTableModel) table3.getModel();
+            DefaultTableModel model = (DefaultTableModel) table1.getModel();
             model.setDataVector(searchResult, columnNames);
 
         }
