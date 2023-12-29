@@ -128,6 +128,7 @@ public class Warehousekeeper extends JFrame implements ActionListener {
             Object[][] searchResult= as.searchSupplier(searchtext);
             String[] columnNames = {"编号", "供应商名称", "供应商地址", "联系方式"};
             DefaultTableModel model = new DefaultTableModel(searchResult, columnNames);
+            model.addRow(new Object[]{});
             table1.setModel(model);
         } else if (e.getSource()==SureButton2 && MedicationInformationToolbar.isEnabled()) {
             System.out.println("t2");
