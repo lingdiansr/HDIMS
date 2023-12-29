@@ -47,7 +47,7 @@ public class Doctor extends JFrame implements ActionListener {
         this.setLayout(new BorderLayout()); // 使用BorderLayout布局管理器
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.add(ButtonPane, BorderLayout.CENTER);
+        //this.add(ButtonPane, BorderLayout.CENTER);
 
         //开处方界面药表
         GiveMedicationTable.setPreferredScrollableViewportSize(new Dimension(700, 100));
@@ -77,7 +77,7 @@ public class Doctor extends JFrame implements ActionListener {
         LT.add(freeTable, "Center");
         LT.add(CreatMedicationButton, "South");
 
-        //table.setPreferredScrollableViewportSize(new Dimension(350, 200));
+
         GiveMedicationToolbar.add(GiveMedicationPanel, "North");
         GiveMedicationToolbar.add(Seacherpannel, "Center");
         GiveMedicationToolbar.add(LT, "South");
@@ -109,7 +109,7 @@ public class Doctor extends JFrame implements ActionListener {
             for (int row = 0; row < rowCount; row++) {
                 boolean isSelected = (boolean) GiveMedicationTable.getValueAt(row, selectedColumn);
                 if (isSelected) { // 如果药物被选中
-                    String medicationName = (String) GiveMedicationTable.getValueAt(row, 0); // 获取药品名
+                    String medicationName = (String) GiveMedicationTable.getValueAt(row, 1); // 获取药品名
                     freeTableModel.setValueAt(medicationName, k, 0); // 更新药品名单元格
                     k++;
                 }
@@ -201,7 +201,7 @@ public class Doctor extends JFrame implements ActionListener {
         }
     }
 
-    class MyTableModel2 extends AbstractTableModel {
+    class MyTableModel2 extends AbstractTableModel {//
         final String[] columnNames = {"药名", "数量", "服用方法"};
         final Object[][] data = {{"", "", ""}, {"", "", ""}, {"", "", ""}};
 
