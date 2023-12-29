@@ -201,7 +201,7 @@ public class Doctor extends JFrame implements ActionListener {
         }
     }
 
-    class MyTableModel2 extends AbstractTableModel {
+    class MyTableModel2 extends AbstractTableModel {//
         final String[] columnNames = {"药名", "数量", "服用方法"};
         final Object[][] data = {{"", "", ""}, {"", "", ""}, {"", "", ""}};
 
