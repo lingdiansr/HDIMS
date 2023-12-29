@@ -41,6 +41,19 @@ public class AdminService {
         }
         return false;
     }
+    public boolean deleteSupplier(Object[][] data) {
+        Supplier[] suppliersToDelete = DBUtil.convertToSupplierArray(data);
+
+        for (Supplier supplier : suppliersToDelete) {
+            try {
+                SupplierDAO.deleteSupplier(supplier.Sno);
+            } catch (Exception e) {
+                System.out.println("Error deleting supplier: " + e.getMessage());
+                return false;
+            }
+        }
+        return true;
+    }
     public boolean updateSupplier(Object[][] data) {
         Supplier[] newSuppliers = DBUtil.convertToSupplierArray(data);
         Supplier[] existingSuppliers = SupplierDAO.selectAllSuppliers();
@@ -72,20 +85,7 @@ public class AdminService {
         }
         return false;
     }
-    public boolean deleteSupplier(Object[][] data) {
-        Supplier[] suppliersToDelete = DBUtil.convertToSupplierArray(data);
 
-        for (Supplier supplier : suppliersToDelete) {
-            try {
-                SupplierDAO.deleteSupplier(supplier.Sno);
-            } catch (Exception e) {
-                System.out.println("Error deleting supplier: " + e.getMessage());
-                return false;
-            }
-        }
-
-        return true;
-    }
     public Object[][] searchDrug(String text) {
         return DBUtil.convertTo2DArray(DrugDAO.fuzzySelectDrugBy(text));
     }
