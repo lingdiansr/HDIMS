@@ -1,6 +1,7 @@
 package UI;
 
 import Service.AdminService;
+import Util.InterfaceUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -141,18 +142,22 @@ public class Warehousekeeper extends JFrame implements ActionListener {
             DefaultTableModel model = new DefaultTableModel(searchResult, columnNames);
             table2.setModel(model);
         } else if (e.getSource() == AddButton1 && SupplierInformationToolbar.isEnabled()) {
-
-
+//            Object[][] data = InterfaceUtil.convertJTableToObjectArray(table1);
+//            String[] columnNames = {"编号", "供应商名称", "供应商地址", "联系方式"};
+//            DefaultTableModel model = new DefaultTableModel(data, columnNames);
+//            table1.setModel(model);
+            JOptionPane.showMessageDialog(null, "添加成功！");
+//            model.addRow(new Object[]{});
         } else if (e.getSource() == AddButton2) {
-
+            JOptionPane.showMessageDialog(null, "添加成功！");
         } else if (e.getSource() == DeleteButton1) {
-
+            JOptionPane.showMessageDialog(null, "删除成功！");
         } else if (e.getSource() == DeleteButton2) {
-
+            JOptionPane.showMessageDialog(null, "删除成功！");
         } else if (e.getSource() == ResetButton1) {
-
+            JOptionPane.showMessageDialog(null, "修改成功！");
         } else if (e.getSource() == ResetButton2) {
-
+            JOptionPane.showMessageDialog(null, "修改成功！");
         }
     }
 }
