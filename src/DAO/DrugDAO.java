@@ -24,7 +24,7 @@ public class DrugDAO {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, drug.PDno);
                 preparedStatement.setString(2, drug.PDname);
-                preparedStatement.setInt(3,drug.PDlife);
+                preparedStatement.setString(3, drug.PDlife);
                 int rowsAffected = preparedStatement.executeUpdate();
                 preparedStatement.close();
                 connection.close();
@@ -90,7 +90,7 @@ public class DrugDAO {
                         Drug drug = new Drug();
                         drug.PDname = resultSet.getString("PDname");
                         drug.PDno = resultSet.getString("PDno");
-                        drug.PDlife = resultSet.getInt("PDlife");
+                        drug.PDlife = resultSet.getString("PDlife");
                         drugs[index] = drug;
                         index++;
                     }
@@ -143,7 +143,7 @@ public class DrugDAO {
                     Drug drug = new Drug();
                     drug.PDno = resultSet.getString("PDno");
                     drug.PDname = resultSet.getString("PDname");
-                    drug.PDlife = resultSet.getInt("PDlife");
+                    drug.PDlife = resultSet.getString("PDlife");
                     drugs[index] = drug;
                     index++;
                 }
@@ -185,7 +185,7 @@ public class DrugDAO {
                     DrugDoctor drug = new DrugDoctor();
                     drug.PDno = resultSet.getString("PDno");
                     drug.PDname = resultSet.getString("PDname");
-                    drug.PDlife = resultSet.getInt("PDlife");
+                    drug.PDlife = resultSet.getString("PDlife");
                     drug.PDnum = resultSet.getInt("PDnum");
                     drugs[index] = drug;
                     index++;

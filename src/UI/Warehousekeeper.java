@@ -50,7 +50,7 @@ public class Warehousekeeper extends JFrame implements ActionListener {
 
     //
     JTable supplierTable = new JTable(25, 4);
-    JTable table2 = new JTable(25, 6);
+    JTable MedicationTable = new JTable(25, 6);
 
 
     public Warehousekeeper() {
@@ -93,7 +93,7 @@ public class Warehousekeeper extends JFrame implements ActionListener {
 
         // 表格实现
         supplierTable.setPreferredScrollableViewportSize(new Dimension(10, 10));
-        table2.setPreferredScrollableViewportSize(new Dimension(10, 10));
+        MedicationTable.setPreferredScrollableViewportSize(new Dimension(10, 10));
 
 
         // 供应商界面设置布局方式,搜索在顶层，表格在中间
@@ -104,7 +104,7 @@ public class Warehousekeeper extends JFrame implements ActionListener {
 
         MedicationInformationPanel.setLayout(new BorderLayout());
         MedicationInformationPanel.add(Seacherpannel2, BorderLayout.NORTH);
-        MedicationInformationPanel.add(new JScrollPane(table2), BorderLayout.CENTER); // 使用JScrollPane将表格包装起来，以实现滚动
+        MedicationInformationPanel.add(new JScrollPane(MedicationTable), BorderLayout.CENTER); // 使用JScrollPane将表格包装起来，以实现滚动
         MedicationInformationToolbar.add(MedicationInformationPanel);
 
 
@@ -140,18 +140,22 @@ public class Warehousekeeper extends JFrame implements ActionListener {
             Object[][] searchResult = as.searchDrug(searchtext);
             String[] columnNames = {"编号", "药品名称", "保质期（天）"};
             DefaultTableModel model = new DefaultTableModel(searchResult, columnNames);
-            table2.setModel(model);
+            model.addRow(new Object[]{});
+            MedicationTable.setModel(model);
         } else if (e.getSource() == AddButton1 && SupplierInformationToolbar.isEnabled()) {
             Object[][] data = InterfaceUtil.convertJTableToObjectArray(supplierTable);
             AdminService as = new AdminService();
-//            if (as.insertSupplier(InterfaceUtil.getSelectedSupplierFromTable(supplierTable))){
-//                JOptionPane.showMessageDialog(null, "添加成功！");
-//            }
+
             if (as.insertSupplier(InterfaceUtil.convertJTableToObjectArray(supplierTable))){
                 JOptionPane.showMessageDialog(null, "添加成功！");
             }
-        } else if (e.getSource() == AddButton2) {
-            JOptionPane.showMessageDialog(null, "添加成功！");
+        } else if (e.getSource() == AddButton2 && MedicationInformationToolbar.isEnabled()) {
+            Object[][] data = InterfaceUtil.convertJTableToObjectArray(MedicationTable);
+            AdminService as = new AdminService();
+            if (as.insertMedition(InterfaceUtil.convertJTableToObjectArray(MedicationTable))) {
+                JOptionPane.showMessageDialog(null, "添加成功！");
+            }
+
         } else if (e.getSource() == DeleteButton1) {
             JOptionPane.showMessageDialog(null, "删除成功！");
         } else if (e.getSource() == DeleteButton2) {

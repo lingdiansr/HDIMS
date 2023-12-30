@@ -1,12 +1,15 @@
 package Service;
 
+import Entity.Drug;
 import Entity.Supplier;
 import DAO.SupplierDAO;
 import DAO.DrugDAO;
 import Util.DBUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdminService {
     public static void main(String[] args) {
@@ -34,7 +37,6 @@ public class AdminService {
     public boolean insertSupplier(Object[][] data) {
         Supplier[] suppliersToInsert = DBUtil.convertToSupplierArray(data);
         Supplier[] existingSuppliers = SupplierDAO.selectAllSuppliers();
-
         List<Supplier> newSuppliers = new ArrayList<>();
 
         for (Supplier supplier : suppliersToInsert) {
@@ -64,6 +66,38 @@ public class AdminService {
         }
         return true; // Return true if all insertions are successful
     }
+
+    public boolean insertMedition(Object[][] data) {
+        Drug[] drugsToInsert = DBUtil.convertToDrugArray(data);
+        Drug[] existingDrugs = DrugDAO.getAllDrug();
+        List<Drug> newDrugs = new ArrayList<>();
+
+        for (Drug drug : drugsToInsert) {
+            if (drug.getPDno() == null || drug.getPDlife() == null || drug.getPDname() == null) {
+                return false;
+            }
+            boolean exists = false;
+            for (Drug existingDrug : existingDrugs) {
+                if (drug.getPDno().equals(existingDrug.getPDno())) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                newDrugs.add(drug);
+            }
+        }
+
+        for (Drug newDrug : newDrugs) {
+            try {
+                DrugDAO.insertDrug(newDrug);
+            } catch (Exception e) {
+                System.out.println("Error inserting supplier: " + e.getMessage());
+                return false; // Return false if any error occurs during insertion
+            }
+        }
+        return true; // Return true if all insertions are successful
+    }
     public boolean insertSupplier(Supplier s){
         try{
             if (SupplierDAO.insertSupplier(s)){
@@ -76,10 +110,18 @@ public class AdminService {
     }
     public boolean deleteSupplier(Object[][] data) {
         Supplier[] suppliersToDelete = DBUtil.convertToSupplierArray(data);
+        Supplier[] existingSuppliers = SupplierDAO.selectAllSuppliers();
 
-        for (Supplier supplier : suppliersToDelete) {
+        List<String> snoListToDelete = Arrays.stream(suppliersToDelete).map(Supplier::getSno).collect(Collectors.toList());
+        List<String> existingSnoList = Arrays.stream(existingSuppliers).map(Supplier::getSno).collect(Collectors.toList());
+
+        List<String> snoListToBeDeleted = existingSnoList.stream()
+                .filter(sno -> !snoListToDelete.contains(sno))
+                .collect(Collectors.toList());
+
+        for (String sno : snoListToBeDeleted) {
             try {
-                SupplierDAO.deleteSupplier(supplier.Sno);
+                SupplierDAO.deleteSupplier(sno);
             } catch (Exception e) {
                 System.out.println("Error deleting supplier: " + e.getMessage());
                 return false;
@@ -87,6 +129,28 @@ public class AdminService {
         }
         return true;
     }
+    public boolean deleteSupplier(Supplier supplier) {
+        try {
+            SupplierDAO.deleteSupplier(supplier.getSno());
+        } catch (Exception e) {
+            System.out.println("Error deleting supplier: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+//    public boolean deleteSupplier(Object[][] data) {
+//        Supplier[] suppliersToDelete = DBUtil.convertToSupplierArray(data);
+//
+//        for (Supplier supplier : suppliersToDelete) {
+//            try {
+//                SupplierDAO.deleteSupplier(supplier.Sno);
+//            } catch (Exception e) {
+//                System.out.println("Error deleting supplier: " + e.getMessage());
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
     public boolean updateSupplier(Object[][] data) {
         Supplier[] newSuppliers = DBUtil.convertToSupplierArray(data);
         Supplier[] existingSuppliers = SupplierDAO.selectAllSuppliers();

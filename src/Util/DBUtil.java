@@ -1,6 +1,6 @@
 package Util;
 import Entity.Supplier;
-
+import Entity.Drug;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -88,6 +88,20 @@ public class DBUtil {
         }
 
         return suppliers;
+    }
+
+    public static Drug[] convertToDrugArray(Object[][] data) {
+        Drug[] drugs = new Drug[data.length];
+
+        for (int i = 0; i < data.length; i++) {
+            drugs[i] = new Drug();
+            drugs[i].PDno = (String) data[i][0];
+            drugs[i].PDname = (String) data[i][1];
+            drugs[i].PDlife = (String) data[i][2];
+
+        }
+        return drugs;
+
     }
     public static void main(String[] args) {
         // TODO Auto-generated method stub
