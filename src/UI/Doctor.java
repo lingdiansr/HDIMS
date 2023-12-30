@@ -9,6 +9,7 @@ import java.awt.event.*;
 import java.awt.event.ActionListener;
 
 public class Doctor extends JFrame implements ActionListener {
+    String no =null;
     JTabbedPane ButtonPane = new JTabbedPane();//让两个工具条共享同一屏幕区域
 
     //开处方工具条
@@ -24,7 +25,7 @@ public class Doctor extends JFrame implements ActionListener {
     //搜索组件
     JPanel Seacherpannel = new JPanel();
     JLabel SearcherLable = new JLabel("搜索");
-    JTextField SearcherField = new JTextField();
+    JTextField SearcherField = new JTextField();    
     JButton SureButton = new JButton("确定");
     //药单
     JPanel LT = new JPanel();
@@ -47,7 +48,7 @@ public class Doctor extends JFrame implements ActionListener {
         this.setLayout(new BorderLayout()); // 使用BorderLayout布局管理器
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.add(ButtonPane, BorderLayout.CENTER);
+        //this.add(ButtonPane, BorderLayout.CENTER);
 
         //开处方界面药表
         GiveMedicationTable.setPreferredScrollableViewportSize(new Dimension(700, 100));
@@ -77,7 +78,7 @@ public class Doctor extends JFrame implements ActionListener {
         LT.add(freeTable, "Center");
         LT.add(CreatMedicationButton, "South");
 
-        //table.setPreferredScrollableViewportSize(new Dimension(350, 200));
+
         GiveMedicationToolbar.add(GiveMedicationPanel, "North");
         GiveMedicationToolbar.add(Seacherpannel, "Center");
         GiveMedicationToolbar.add(LT, "South");
@@ -98,7 +99,10 @@ public class Doctor extends JFrame implements ActionListener {
         ButtonPane.addTab("已开处方", null, HavegivedMedicationToolbar);
         this.add(ButtonPane);
     }
-
+    public Doctor(String no){
+        this();
+        this.no=no;
+    }
     @Override//为了避免取消后还在表格中的问题，用到每次更新前清除的思想
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == ADDMedicationButton) {
@@ -109,7 +113,7 @@ public class Doctor extends JFrame implements ActionListener {
             for (int row = 0; row < rowCount; row++) {
                 boolean isSelected = (boolean) GiveMedicationTable.getValueAt(row, selectedColumn);
                 if (isSelected) { // 如果药物被选中
-                    String medicationName = (String) GiveMedicationTable.getValueAt(row, 0); // 获取药品名
+                    String medicationName = (String) GiveMedicationTable.getValueAt(row, 1); // 获取药品名
                     freeTableModel.setValueAt(medicationName, k, 0); // 更新药品名单元格
                     k++;
                 }
@@ -201,7 +205,7 @@ public class Doctor extends JFrame implements ActionListener {
         }
     }
 
-    class MyTableModel2 extends AbstractTableModel {
+    class MyTableModel2 extends AbstractTableModel {//
         final String[] columnNames = {"药名", "数量", "服用方法"};
         final Object[][] data = {{"", "", ""}, {"", "", ""}, {"", "", ""}};
 

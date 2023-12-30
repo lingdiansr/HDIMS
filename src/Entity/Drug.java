@@ -3,12 +3,12 @@ package Entity;
 public class Drug {
     public String PDno;
     public String PDname;
-    public int PDlife;
+    public String PDlife;
 
     public Drug() {
     }
 
-    public Drug(String PDno, String PDname, int PDlife) {
+    public Drug(String PDno, String PDname, String PDlife) {
         this.PDno = PDno;
         this.PDname = PDname;
         this.PDlife = PDlife;
@@ -39,11 +39,11 @@ public class Drug {
         this.PDname = PDname;
     }
 
-    public int getPDlife() {
-        return PDlife;
+    public String getPDlife() {
+        return (String) PDlife;
     }
 
-    public void setPDlife(int PDlife) {
+    public void setPDlife(String PDlife) {
         this.PDlife = PDlife;
     }
 }

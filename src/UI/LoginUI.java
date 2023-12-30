@@ -119,7 +119,7 @@ public class LoginUI extends JFrame implements ActionListener {
                     doctor.setDpwd(password);
                     if (us.DoctorRight(doctor)) {
                         dispose();
-                        new Doctor();
+                        new UI.Doctor(id);
                     }
                 } else if (Identitynurse.isSelected()) {
                     System.out.println("Selected Option 2");
@@ -128,7 +128,7 @@ public class LoginUI extends JFrame implements ActionListener {
                     nurse.setNpwd(password);
                     if (us.NurseRight(nurse)) {
                         dispose();
-                        new Nurse();
+                        new UI.Nurse(id);
                     }
                 } else if (Identityadmin.isSelected()) {
                     System.out.println("Selected Option 3");
@@ -137,7 +137,7 @@ public class LoginUI extends JFrame implements ActionListener {
                     admin.setApwd(password);
                     if (us.AdminRight(admin)) {
                         dispose();
-                        new Warehousekeeper();
+                        new UI.Warehousekeeper(id);
                     } else {
                         JOptionPane.showMessageDialog(this, "工号或密码错误", "错误", JOptionPane.ERROR_MESSAGE);
                     }

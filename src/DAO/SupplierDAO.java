@@ -31,11 +31,11 @@ public class SupplierDAO {
         }
     }
 
-    public static boolean updateSupplier(String Sno, String Sname, String Saddr, String Sphone) {
+    public static boolean updateSupplier(Supplier s) {
         try {
             Connection connection = DBUtil.getConnection();
             Statement statement = connection.createStatement();
-            String query = "UPDATE Supplier SET Sname = '" + Sname + "', Saddr = '" + Saddr + "', Sphone = '" + Sphone + "' WHERE Sno = '" + Sno + "'";
+            String query = "UPDATE Supplier SET Sname = '" + s.getSname() + "', Saddr = '" + s.getSaddr() + "', Sphone = '" + s.getSphone() + "' WHERE Sno = '" + s.getSno() + "'";
             int rowsAffected = statement.executeUpdate(query);
             statement.close();
             connection.close();

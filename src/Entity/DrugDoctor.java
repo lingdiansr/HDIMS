@@ -6,7 +6,7 @@ public class DrugDoctor extends Drug{
     public DrugDoctor() {
     }
 
-    public DrugDoctor(String PDno, String PDname, int PDlife, int PDnum) {
+    public DrugDoctor(String PDno, String PDname, String PDlife, int PDnum) {
         super(PDno, PDname, PDlife);
         this.PDnum = PDnum;
     }
