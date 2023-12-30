@@ -65,6 +65,12 @@ public class Nurse extends JFrame implements ActionListener {
 
     NurseService as = new NurseService();
 
+    String[] columnNames1 = {"处方编号", "病人身份证", "开出医生", "开出时间","处理护士编号","处理时间","状态"};
+    DefaultTableModel model1 = (DefaultTableModel) table1.getModel();
+    String[] columnNames2 = {"药品编号", "批次", "数量", "供应商编号","入库管理员编号","入库时间"};
+    DefaultTableModel model2 = (DefaultTableModel) table2.getModel();
+    String[] columnNames3 = {"处方编号", "病人身份证", "开出医生", "开出时间","处理护士编号","处理时间","状态"};
+    DefaultTableModel model3 = (DefaultTableModel) table3.getModel();
     public Nurse() {
         this.setTitle("护士界面");
         this.setSize(800, 600);
@@ -107,18 +113,15 @@ public class Nurse extends JFrame implements ActionListener {
 
         // 表格实现
         table1.setPreferredScrollableViewportSize(new Dimension(10, 10));
-        String[] columnNames1 = {"处方编号", "病人身份证", "开出医生", "开出时间","处理护士编号","处理时间","状态"};
-        DefaultTableModel model1 = (DefaultTableModel) table1.getModel();
+
         model1.setDataVector(new Object[0][], columnNames1);
 
         table2.setPreferredScrollableViewportSize(new Dimension(10, 10));
-        String[] columnNames2 = {"药品编号", "批次", "数量", "供应商编号","入库管理员编号","入库时间"};
-        DefaultTableModel model2 = (DefaultTableModel) table2.getModel();
+
         model2.setDataVector(new Object[0][], columnNames2);
 
         table3.setPreferredScrollableViewportSize(new Dimension(10, 10));
-        String[] columnNames3 = {"处方编号", "病人身份证", "开出医生", "开出时间","处理护士编号","处理时间","状态"};
-        DefaultTableModel model3 = (DefaultTableModel) table3.getModel();
+
         model3.setDataVector(new Object[0][], columnNames3);
 
         // 供应商界面设置布局方式,搜索在顶层，表格在中间
@@ -165,26 +168,19 @@ public Nurse(String no){
             String searchtext = SearcherField1.getText();
            // NurseService as = new NurseService();
             Object[][] searchResult = as.searchPrescription(searchtext);
-            String[] columnNames = {"处方编号", "病人身份证", "开出医生", "开出时间","处理护士编号","处理时间","状态"};
-
-            DefaultTableModel model = (DefaultTableModel) table1.getModel();
-            model.setDataVector(searchResult, columnNames);
+            model1.setDataVector(searchResult, columnNames1);
 
         }else if (e.getSource() == SureButton2 && SupplierInformationToolbar.isEnabled()) {
             String searchtext = SearcherField2.getText();
             //NurseService as = new NurseService();
             Object[][] searchResult = as.searchInventory(searchtext);
-            String[] columnNames = {"药品编号", "批次", "数量", "供应商编号","入库管理员编号","入库时间"};
-            DefaultTableModel model = (DefaultTableModel) table2.getModel();
-            model.setDataVector(searchResult, columnNames);
+            model2.setDataVector(searchResult, columnNames2);
 
         }else if (e.getSource() == SureButton3 && SupplierInformationToolbar.isEnabled()) {
             String searchtext = SearcherField3.getText();
             //NurseService as = new NurseService();
             Object[][] searchResult = as.searchPrescription(searchtext,false);
-            String[] columnNames = {"处方编号", "病人身份证", "开出医生", "开出时间","处理护士编号","处理时间","状态"};
-            DefaultTableModel model = (DefaultTableModel) table3.getModel();
-            model.setDataVector(searchResult, columnNames);
+            model3.setDataVector(searchResult, columnNames3);
 
         }
 
