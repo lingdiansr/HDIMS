@@ -6,7 +6,9 @@ import DAO.DrugDAO;
 import Util.DBUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdminService {
     public static void main(String[] args) {
@@ -76,10 +78,18 @@ public class AdminService {
     }
     public boolean deleteSupplier(Object[][] data) {
         Supplier[] suppliersToDelete = DBUtil.convertToSupplierArray(data);
+        Supplier[] existingSuppliers = SupplierDAO.selectAllSuppliers();
 
-        for (Supplier supplier : suppliersToDelete) {
+        List<String> snoListToDelete = Arrays.stream(suppliersToDelete).map(Supplier::getSno).collect(Collectors.toList());
+        List<String> existingSnoList = Arrays.stream(existingSuppliers).map(Supplier::getSno).collect(Collectors.toList());
+
+        List<String> snoListToBeDeleted = existingSnoList.stream()
+                .filter(sno -> !snoListToDelete.contains(sno))
+                .collect(Collectors.toList());
+
+        for (String sno : snoListToBeDeleted) {
             try {
-                SupplierDAO.deleteSupplier(supplier.Sno);
+                SupplierDAO.deleteSupplier(sno);
             } catch (Exception e) {
                 System.out.println("Error deleting supplier: " + e.getMessage());
                 return false;
@@ -87,6 +97,28 @@ public class AdminService {
         }
         return true;
     }
+    public boolean deleteSupplier(Supplier supplier) {
+        try {
+            SupplierDAO.deleteSupplier(supplier.getSno());
+        } catch (Exception e) {
+            System.out.println("Error deleting supplier: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+//    public boolean deleteSupplier(Object[][] data) {
+//        Supplier[] suppliersToDelete = DBUtil.convertToSupplierArray(data);
+//
+//        for (Supplier supplier : suppliersToDelete) {
+//            try {
+//                SupplierDAO.deleteSupplier(supplier.Sno);
+//            } catch (Exception e) {
+//                System.out.println("Error deleting supplier: " + e.getMessage());
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
     public boolean updateSupplier(Object[][] data) {
         Supplier[] newSuppliers = DBUtil.convertToSupplierArray(data);
         Supplier[] existingSuppliers = SupplierDAO.selectAllSuppliers();
