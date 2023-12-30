@@ -9,6 +9,7 @@ import java.awt.event.*;
 import java.awt.event.ActionListener;
 
 public class Doctor extends JFrame implements ActionListener {
+    String no =null;
     JTabbedPane ButtonPane = new JTabbedPane();//让两个工具条共享同一屏幕区域
 
     //开处方工具条
@@ -98,7 +99,10 @@ public class Doctor extends JFrame implements ActionListener {
         ButtonPane.addTab("已开处方", null, HavegivedMedicationToolbar);
         this.add(ButtonPane);
     }
-
+    public Doctor(String no){
+        this();
+        this.no=no;
+    }
     @Override//为了避免取消后还在表格中的问题，用到每次更新前清除的思想
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == ADDMedicationButton) {

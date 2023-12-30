@@ -13,6 +13,7 @@ import static DAO.SupplierDAO.insertSupplier;
 
 
 public class Warehousekeeper extends JFrame implements ActionListener {
+    String no = null;
     JTabbedPane ButtonPane = new JTabbedPane();//个工具条共享一个空间
     //供应商工具条
     JToolBar SupplierInformationToolbar = new JToolBar("供应商信息");
@@ -117,7 +118,10 @@ public class Warehousekeeper extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-
+    public Warehousekeeper(String no){
+        this();
+        this.no=no;
+    }
     public static void main(String[] s) {
         Warehousekeeper frame = new Warehousekeeper();
         frame.setVisible(true);
@@ -133,6 +137,7 @@ public class Warehousekeeper extends JFrame implements ActionListener {
             DefaultTableModel model = new DefaultTableModel(searchResult, columnNames);
             model.addRow(new Object[]{});
             supplierTable.setModel(model);
+            System.out.println(no);
         } else if (e.getSource() == SureButton2 && MedicationInformationToolbar.isEnabled()) {
             System.out.println("t2");
             String searchtext = SearcherField2.getText();
@@ -143,9 +148,11 @@ public class Warehousekeeper extends JFrame implements ActionListener {
             model.addRow(new Object[]{});
             MedicationTable.setModel(model);
         } else if (e.getSource() == AddButton1 && SupplierInformationToolbar.isEnabled()) {
-            Object[][] data = InterfaceUtil.convertJTableToObjectArray(supplierTable);
+//            Object[][] data = InterfaceUtil.convertJTableToObjectArray(supplierTable);
             AdminService as = new AdminService();
-
+//            if (as.insertSupplier(InterfaceUtil.getSelectedSupplierFromTable(supplierTable))){
+//                JOptionPane.showMessageDialog(null, "添加成功！");
+//            }
             if (as.insertSupplier(InterfaceUtil.convertJTableToObjectArray(supplierTable))){
                 JOptionPane.showMessageDialog(null, "添加成功！");
             }

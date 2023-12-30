@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 
 
 public class Nurse extends JFrame implements ActionListener {
+    String no =null;
     JTabbedPane ButtonPane = new JTabbedPane();//三个工具条共享一个空间
     //供应商工具条
     JToolBar SupplierInformationToolbar = new JToolBar("查看库存");
@@ -117,7 +118,10 @@ public class Nurse extends JFrame implements ActionListener {
 
     }
 
-
+public Nurse(String no){
+        this();
+        this.no=no;
+}
     public static void main(String[] s) {
         Nurse frame = new Nurse();
         frame.setVisible(true);
