@@ -25,7 +25,7 @@ public class Doctor extends JFrame implements ActionListener {
     //搜索组件
     JPanel Seacherpannel = new JPanel();
     JLabel SearcherLable = new JLabel("搜索");
-    JTextField SearcherField = new JTextField();
+    JTextField SearcherField = new JTextField();    
     JButton SureButton = new JButton("确定");
     //药单
     JPanel LT = new JPanel();
