@@ -28,7 +28,7 @@ public class Main{
 
     public static void main(String[] args) {
         // Example usage
-        String[] columnNames = {"PDno", "PDname", "PDlife", "PDnum", "选择"};
-        System.out.println(columnNames.length);
+//        String[] columnNames = {"PDno", "PDname", "PDlife", "PDnum", "选择"};
+//        System.out.println(columnNames.length);
     }
 }

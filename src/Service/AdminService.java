@@ -5,6 +5,9 @@ import DAO.SupplierDAO;
 import DAO.DrugDAO;
 import Util.DBUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AdminService {
     public static void main(String[] args) {
 //        AdminService as = new AdminService();
@@ -29,15 +32,45 @@ public class AdminService {
     }
 
     public boolean insertSupplier(Object[][] data) {
-        Supplier[] suppliers = DBUtil.convertToSupplierArray(data);
+        Supplier[] suppliersToInsert = DBUtil.convertToSupplierArray(data);
+        Supplier[] existingSuppliers = SupplierDAO.selectAllSuppliers();
 
-        for (Supplier supplier : suppliers) {
+        List<Supplier> newSuppliers = new ArrayList<>();
+
+        for (Supplier supplier : suppliersToInsert) {
+            if (supplier.getSno()==null||supplier.getSname()==null||supplier.getSaddr()==null||supplier.getSphone()==null)
+            {
+                return false;
+            }
+            boolean exists = false;
+            for (Supplier existingSupplier : existingSuppliers) {
+                if (supplier.getSno().equals(existingSupplier.getSno())) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                newSuppliers.add(supplier);
+            }
+        }
+
+        for (Supplier newSupplier : newSuppliers) {
             try {
-                SupplierDAO.insertSupplier(supplier);
-                return true;
+                SupplierDAO.insertSupplier(newSupplier);
             } catch (Exception e) {
                 System.out.println("Error inserting supplier: " + e.getMessage());
+                return false; // Return false if any error occurs during insertion
             }
+        }
+        return true; // Return true if all insertions are successful
+    }
+    public boolean insertSupplier(Supplier s){
+        try{
+            if (SupplierDAO.insertSupplier(s)){
+                return true;
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
         return false;
     }

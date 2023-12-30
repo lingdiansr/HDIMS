@@ -49,7 +49,7 @@ public class Warehousekeeper extends JFrame implements ActionListener {
     JButton ResetButton2 = new JButton("修改");
 
     //
-    JTable table1 = new JTable(25, 6);
+    JTable supplierTable = new JTable(25, 4);
     JTable table2 = new JTable(25, 6);
 
 
@@ -92,14 +92,14 @@ public class Warehousekeeper extends JFrame implements ActionListener {
 
 
         // 表格实现
-        table1.setPreferredScrollableViewportSize(new Dimension(10, 10));
+        supplierTable.setPreferredScrollableViewportSize(new Dimension(10, 10));
         table2.setPreferredScrollableViewportSize(new Dimension(10, 10));
 
 
         // 供应商界面设置布局方式,搜索在顶层，表格在中间
         SP.setLayout(new BorderLayout());
         SP.add(Seacherpannel1, BorderLayout.NORTH);
-        SP.add(new JScrollPane(table1), BorderLayout.CENTER); // 使用JScrollPane将表格包装起来，以实现滚动
+        SP.add(new JScrollPane(supplierTable), BorderLayout.CENTER); // 使用JScrollPane将表格包装起来，以实现滚动
         SupplierInformationToolbar.add(SP);
 
         MedicationInformationPanel.setLayout(new BorderLayout());
@@ -132,7 +132,7 @@ public class Warehousekeeper extends JFrame implements ActionListener {
             String[] columnNames = {"编号", "供应商名称", "供应商地址", "联系方式"};
             DefaultTableModel model = new DefaultTableModel(searchResult, columnNames);
             model.addRow(new Object[]{});
-            table1.setModel(model);
+            supplierTable.setModel(model);
         } else if (e.getSource() == SureButton2 && MedicationInformationToolbar.isEnabled()) {
             System.out.println("t2");
             String searchtext = SearcherField2.getText();
@@ -142,12 +142,14 @@ public class Warehousekeeper extends JFrame implements ActionListener {
             DefaultTableModel model = new DefaultTableModel(searchResult, columnNames);
             table2.setModel(model);
         } else if (e.getSource() == AddButton1 && SupplierInformationToolbar.isEnabled()) {
-//            Object[][] data = InterfaceUtil.convertJTableToObjectArray(table1);
-//            String[] columnNames = {"编号", "供应商名称", "供应商地址", "联系方式"};
-//            DefaultTableModel model = new DefaultTableModel(data, columnNames);
-//            table1.setModel(model);
-            JOptionPane.showMessageDialog(null, "添加成功！");
-//            model.addRow(new Object[]{});
+            Object[][] data = InterfaceUtil.convertJTableToObjectArray(supplierTable);
+            AdminService as = new AdminService();
+//            if (as.insertSupplier(InterfaceUtil.getSelectedSupplierFromTable(supplierTable))){
+//                JOptionPane.showMessageDialog(null, "添加成功！");
+//            }
+            if (as.insertSupplier(InterfaceUtil.convertJTableToObjectArray(supplierTable))){
+                JOptionPane.showMessageDialog(null, "添加成功！");
+            }
         } else if (e.getSource() == AddButton2) {
             JOptionPane.showMessageDialog(null, "添加成功！");
         } else if (e.getSource() == DeleteButton1) {

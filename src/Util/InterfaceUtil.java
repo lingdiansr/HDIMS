@@ -1,6 +1,7 @@
 package Util;
 
 import Entity.Prescription;
+import Entity.Supplier;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,7 +22,7 @@ public class InterfaceUtil {
 
         return data;
     }
-    public Prescription getSelectedPrescriptionFromTable(JTable table) {
+    public static Prescription getSelectedPrescriptionFromTable(JTable table) {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) { // 确保有选中的行
             // 通过选中的行索引获取行数据
@@ -45,4 +46,24 @@ public class InterfaceUtil {
             return null; // 如果没有选中的行，则返回 null
         }
     }
+    public static Supplier getSelectedSupplierFromTable(JTable table) {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            Object[] rowData = new Object[4]; // Assuming there are 4 columns of data
+            for (int i = 0; i < 4; i++) {
+                rowData[i] = table.getModel().getValueAt(selectedRow, i);
+            }
+
+            Supplier supplier = new Supplier();
+            supplier.Sno = (String) rowData[0];
+            supplier.Sname = (String) rowData[1];
+            supplier.Saddr = (String) rowData[2];
+            supplier.Sphone = (String) rowData[3];
+
+            return supplier;
+        } else {
+            return null;
+        }
+    }
+
 }
