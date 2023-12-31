@@ -158,8 +158,11 @@ public class Nurse extends JFrame implements ActionListener {
         table3.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(table3.getSelectedRow()==0)
+                if (table3.getSelectedRow() == 0) {
+                    NurseService nurseService =new NurseService();
+                   if (nurseService.handleInventory(table3))
                     JOptionPane.showMessageDialog(null, "配药完成");
+                }
             }
         });
 
