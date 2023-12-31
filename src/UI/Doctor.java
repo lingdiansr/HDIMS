@@ -109,7 +109,7 @@ public class Doctor extends JFrame implements ActionListener {
             freeTableModel.resetRowCount();
             int k = 0;
             int rowCount = GiveMedicationTable.getRowCount();
-            int selectedColumn = 2; // 第三列索引
+            int selectedColumn = 4; // 第三列索引
             for (int row = 0; row < rowCount; row++) {
                 boolean isSelected = (boolean) GiveMedicationTable.getValueAt(row, selectedColumn);
                 if (isSelected) { // 如果药物被选中
