@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 
 
@@ -80,6 +82,7 @@ public class Nurse extends JFrame implements ActionListener {
         SureButton1.addActionListener(this);
         SureButton2.addActionListener(this);
         SureButton3.addActionListener(this);
+        ResetButton3.addActionListener(this);
 
         SupplierInformationToolbar.setLayout(new BoxLayout(SupplierInformationToolbar, BoxLayout.Y_AXIS));
         // 搜索组件
@@ -114,6 +117,7 @@ public class Nurse extends JFrame implements ActionListener {
         // 表格实现
         table1.setPreferredScrollableViewportSize(new Dimension(10, 10));
 
+
         model1.setDataVector(new Object[0][], columnNames1);
 
         table2.setPreferredScrollableViewportSize(new Dimension(10, 10));
@@ -123,6 +127,7 @@ public class Nurse extends JFrame implements ActionListener {
         table3.setPreferredScrollableViewportSize(new Dimension(10, 10));
 
         model3.setDataVector(new Object[0][], columnNames3);
+
 
         // 供应商界面设置布局方式,搜索在顶层，表格在中间
         SP.setLayout(new BorderLayout());
@@ -150,6 +155,14 @@ public class Nurse extends JFrame implements ActionListener {
         this.add(ButtonPane, BorderLayout.CENTER);//没有其他了，直接填满
         this.setVisible(true);
 
+        table3.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(table3.getSelectedRow()==0)
+                    JOptionPane.showMessageDialog(null, "配药完成");
+            }
+        });
+
 
     }
 
@@ -161,6 +174,7 @@ public Nurse(String no){
         Nurse frame = new Nurse();
         frame.setVisible(true);
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -182,7 +196,9 @@ public Nurse(String no){
             Object[][] searchResult = as.searchPrescription(searchtext,false);
             model3.setDataVector(searchResult, columnNames3);
 
+
         }
+
 
     }
 }
