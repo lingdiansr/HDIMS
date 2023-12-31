@@ -6,7 +6,9 @@ import DAO.PrescriptionDAO;
 import DAO.SupplierDAO;
 import Entity.*;
 import Util.DBUtil;
+import Util.InterfaceUtil;
 
+import javax.swing.*;
 import java.util.Date;
 
 public class NurseService {
@@ -44,6 +46,14 @@ public class NurseService {
     public boolean handleInventoryDRug(int Pno){
 
         return PrescriptionDAO.updatePrescriptionPstate(Pno,new Date());
+    }
+    public boolean handleInventory(JTable jTable){
+        Prescription prescription = InterfaceUtil.getSelectedPrescriptionFromTable(jTable);
+        if (prescription.getNno()!=null){
+            return handleInventoryDRug(prescription.Pno);
+        }
+        else
+            return false;
     }
     public Object[][] searchInventory(String text) {
 //        for (DrugDoctor d : DrugDAO.fuzzySelectBy(text)) {
