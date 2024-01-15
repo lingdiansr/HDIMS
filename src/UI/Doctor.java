@@ -1,14 +1,17 @@
 package UI;
 
-import Service.DoctorService;
+import Service.DoctorListener;
+
 
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 import java.awt.event.*;
 import java.awt.event.ActionListener;
 
-public class Doctor extends JFrame implements ActionListener {
+
+public class Doctor extends JFrame {
     String no =null;
     JTabbedPane ButtonPane = new JTabbedPane();//让两个工具条共享同一屏幕区域
 
@@ -25,22 +28,22 @@ public class Doctor extends JFrame implements ActionListener {
     //搜索组件
     JPanel Seacherpannel = new JPanel();
     JLabel SearcherLable = new JLabel("搜索");
-    JTextField SearcherField = new JTextField();    
-    JButton SureButton = new JButton("确定");
+    public JTextField SearcherField = new JTextField();
+    public JButton SureButton = new JButton("确定");
     //药单
     JPanel LT = new JPanel();
     JLabel MedicationListLable = new JLabel("药单");
 
     //表格
-    MyTableModel myTableModel = new MyTableModel();
-    JTable GiveMedicationTable = new JTable(myTableModel);
-    JButton ADDMedicationButton = new JButton("添加药物至药单");
+    public MyTableModel myTableModel = new MyTableModel();
+    public JTable GiveMedicationTable = new JTable((TableModel) myTableModel);
+    public JButton ADDMedicationButton = new JButton("添加药物至药单");
 
-    MyTableModel2 freeTableModel = new MyTableModel2();
-    JTable freeTable = new JTable(freeTableModel);
-    MyTableModel3 HavegivedMedicationModel = new MyTableModel3();
-    JTable HaveTable = new JTable(HavegivedMedicationModel);
-    JButton CreatMedicationButton = new JButton("生成药单");
+    public MyTableModel2 freeTableModel = new MyTableModel2();
+    JTable freeTable = new JTable((TableModel) freeTableModel);
+    public MyTableModel3 HavegivedMedicationModel = new MyTableModel3();
+    JTable HaveTable = new JTable((TableModel) HavegivedMedicationModel);
+    public JButton CreatMedicationButton = new JButton("生成药单");
 
     public Doctor() {
         this.setTitle("医生界面");
@@ -69,9 +72,10 @@ public class Doctor extends JFrame implements ActionListener {
         Seacherpannel.add(ADDMedicationButton);
         Seacherpannel.setPreferredSize(new Dimension(400, 30));
         //按钮响应实现
-        SureButton.addActionListener(this);
-        ADDMedicationButton.addActionListener(this);
-        CreatMedicationButton.addActionListener(this);
+        DoctorListener acl= new DoctorListener(this);
+        SureButton.addActionListener(acl);
+        ADDMedicationButton.addActionListener(acl);
+        CreatMedicationButton.addActionListener(acl);
 
         LT.setLayout(new BorderLayout());
         LT.add(MedicationListLable, "North");
@@ -103,181 +107,10 @@ public class Doctor extends JFrame implements ActionListener {
         this();
         this.no=no;
     }
-    @Override//为了避免取消后还在表格中的问题，用到每次更新前清除的思想
-    public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == ADDMedicationButton) {
-            freeTableModel.resetRowCount();
-            int k = 0;
-            int rowCount = GiveMedicationTable.getRowCount();
-            int selectedColumn = 4; // 第三列索引
-            for (int row = 0; row < rowCount; row++) {
-                boolean isSelected = (boolean) GiveMedicationTable.getValueAt(row, selectedColumn);
-                if (isSelected) { // 如果药物被选中
-                    String medicationName = (String) GiveMedicationTable.getValueAt(row, 1); // 获取药品名
-                    freeTableModel.setValueAt(medicationName, k, 0); // 更新药品名单元格
-                    k++;
-                }
-            }
-            JOptionPane.showMessageDialog(null, "已添加");
-        } else if (event.getSource() == CreatMedicationButton) {
-            // 在已开处方工具条中添加药物数据的逻辑
-            int rowCount = freeTableModel.getRowCount();
-            for (int row = 0; row < rowCount; row++) {
-                String medicationName = (String) freeTableModel.getValueAt(row, 0);
-                String quantity = (String) freeTableModel.getValueAt(row, 1);
-                String usage = (String) freeTableModel.getValueAt(row, 2);
-                // 在这里将药物数据添加到已开处方工具条的表格中
-                HavegivedMedicationModel.setValueAt(medicationName, row, 0);
-                HavegivedMedicationModel.setValueAt(quantity, row, 1);
-                HavegivedMedicationModel.setValueAt(usage, row, 2);
-            }
-            // 通知已开处方工具条的表格模型更新数据
-            JOptionPane.showMessageDialog(null, "药单创建成功！请去已开处方查看");
-        } else if (event.getSource() == SureButton) {
-            String searchText = SearcherField.getText();
-            DoctorService ds = new DoctorService();
-            Object[][] searchResult = ds.Search(searchText);
-            Object[][] searchResultWithCheck = new Object[searchResult.length][searchResult[0].length + 1];
-            for (int i = 0; i < searchResult.length; i++) {
-                System.arraycopy(searchResult[i], 0, searchResultWithCheck[i], 0, searchResult[i].length);
-                searchResultWithCheck[i][searchResult[i].length] = false;
-            }
-            myTableModel.setData(searchResultWithCheck);
-        }
 
-
-    }
     public static void main (String[] args){
         Doctor frame = new Doctor();
         frame.setVisible(true);
-    }
-
-    public class MyTableModel extends AbstractTableModel {
-        final String[] columnNames = {"PDno", "PDname", "PDlife", "PDnum", "选择"};
-        Object[][] data = {{" ", " ", " ", 0, false} };
-        final Class[] columnClasses = {String.class, String.class, String.class, Integer.class, Boolean.class};
-
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        public int getRowCount() {
-            return data.length;
-        }
-
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
-
-        public Object getValueAt(int row, int col) {
-            if (row < data.length && col < data[row].length) {
-                return data[row][col];
-            } else {
-                return null; // Handle the case where the row or column index is out of bounds
-            }
-        }
-
-        public Class getColumnClass(int c) {
-            return columnClasses[c];
-        }
-
-        public boolean isCellEditable(int row, int col) { // 设置编辑单元格
-            return col == 4; // 只允许编辑选择列
-        }
-
-        public void setValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
-        }
-
-        public void setData(Object[][] newData) {
-            data = newData;
-            fireTableDataChanged(); // Notify the table model that the data has changed
-        }
-    }
-
-    class MyTableModel2 extends AbstractTableModel {//
-        final String[] columnNames = {"药名", "数量", "服用方法"};
-        final Object[][] data = {{"", "", ""}, {"", "", ""}, {"", "", ""}};
-
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        public int getRowCount() {
-            return data.length;
-        }
-
-        public String getColumnName(int col) { // 修改这个方法名称
-            return columnNames[col];
-        }
-
-        public Object getValueAt(int row, int col) {
-            return data[row][col];
-        }
-
-        public void setValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
-        }
-
-        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
-        }
-
-        public void resetRowCount() {
-            for (int row = 0; row < data.length; row++) {
-                data[row][0] = ""; // 或 data[row][0] = null;
-            }
-            fireTableDataChanged();
-        }
-
-        public boolean isCellEditable(int row, int col) {
-            return true; // 设置所有单元格都可编辑
-        }
-
-    }
-
-    class MyTableModel3 extends AbstractTableModel {
-        final String[] columnNames = {"药名", "数量", "服用方法"};
-        final Object[][] data = {{"", "", ""}, {"", "", ""}, {"", "", ""}};
-
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        public int getRowCount() {
-            return data.length;
-        }
-
-        public String getColumnName(int col) { // 修改这个方法名称
-            return columnNames[col];
-        }
-
-        public Object getValueAt(int row, int col) {
-            return data[row][col];
-        }
-
-        public void setValueAt(Object value, int row, int col) {
-            data[row][col] = value;
-            fireTableCellUpdated(row, col);
-        }
-
-        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
-        }
-
-        public void resetRowCount() {
-            for (int row = 0; row < data.length; row++) {
-                data[row][0] = ""; // 或 data[row][0] = null;
-            }
-            fireTableDataChanged();
-        }
-
-        public boolean isCellEditable(int row, int col) {
-            return true; // 设置所有单元格都可编辑
-        }
-
     }
 
 }
