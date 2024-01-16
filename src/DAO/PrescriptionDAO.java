@@ -1,8 +1,5 @@
 package DAO;
-import java.util.Date;
 
-import Entity.InventoryDrug;
-import Entity.PID;
 import Entity.Prescription;
 import Util.DBUtil;
 
@@ -10,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Date;
 
 public class PrescriptionDAO {
 
@@ -70,12 +68,12 @@ public class PrescriptionDAO {
         }
     }
 
-    public static boolean updatePrescriptionPstate(int Pno,Date Htime) {
+    public static boolean updatePrescriptionPstate(int Pno, Date Htime) {
         try {
-          //  System.out.println(new java.sql.Date(Htime.getTime()));
+            //  System.out.println(new java.sql.Date(Htime.getTime()));
             Connection connection = DBUtil.getConnection();
             Statement statement = connection.createStatement();
-            String query = "UPDATE Prescription SET Pstate= '" +true+ "', Htime ='" + new java.sql.Date(Htime.getTime()) + "' WHERE Pno = " + Pno;
+            String query = "UPDATE Prescription SET Pstate= '" + true + "', Htime ='" + new java.sql.Date(Htime.getTime()) + "' WHERE Pno = " + Pno;
             int rowsAffected = statement.executeUpdate(query);
             statement.close();
             connection.close();
@@ -181,12 +179,13 @@ public class PrescriptionDAO {
         }
         return prescriptions;
     }
+
     public static Prescription[] fuzzySelectBy(String text) {
         Prescription[] prescriptions = null;
         try {
             // 建立连接
             Connection connection = DBUtil.getConnection();
-            String query = "SELECT * FROM Prescription WHERE Pno LIKE N'%"+text+"%' OR Pid LIKE N'%"+text+"%' OR Dno LIKE N'%"+text+"%' OR Ptime LIKE N'%"+text+"%'OR Nno LIKE N'%"+text+"%'";
+            String query = "SELECT * FROM Prescription WHERE Pno LIKE N'%" + text + "%' OR Pid LIKE N'%" + text + "%' OR Dno LIKE N'%" + text + "%' OR Ptime LIKE N'%" + text + "%'OR Nno LIKE N'%" + text + "%'";
             // 创建一个具有可滚动结果集的prepareStatement
             PreparedStatement preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
@@ -227,12 +226,13 @@ public class PrescriptionDAO {
         }
         return prescriptions;
     }
-    public static Prescription[] fuzzySelectBy(String text,boolean Pstate) {
+
+    public static Prescription[] fuzzySelectBy(String text, boolean Pstate) {
         Prescription[] prescriptions = null;
         try {
             // 建立连接
             Connection connection = DBUtil.getConnection();
-            String query = "SELECT * FROM Prescription WHERE (Pno LIKE N'%"+text+"%' OR Pid LIKE N'%"+text+"%' OR Dno LIKE N'%"+text+"%' OR Ptime LIKE N'%"+text+"%'OR Nno LIKE N'%"+text+"%') and Pstate =?";
+            String query = "SELECT * FROM Prescription WHERE (Pno LIKE N'%" + text + "%' OR Pid LIKE N'%" + text + "%' OR Dno LIKE N'%" + text + "%' OR Ptime LIKE N'%" + text + "%'OR Nno LIKE N'%" + text + "%') and Pstate =?";
             // 创建一个具有可滚动结果集的prepareStatement
             PreparedStatement preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             preparedStatement.setBoolean(1, Pstate);

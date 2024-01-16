@@ -1,16 +1,21 @@
 package DAO;
+
+import Entity.Doctor;
+import Util.DBUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import Entity.Doctor;
-import Util.DBUtil;
 public class DoctorDAO {
     public static boolean insert(Doctor doctor) {
-        try (Connection connection = DBUtil.getConnection()) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DBUtil.getConnection();
             String sql = "INSERT INTO Doctor (Dno, Dname, Dsex, Dage, Dpwd) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, doctor.getDno());
             preparedStatement.setString(2, doctor.getDname());
             preparedStatement.setBoolean(3, doctor.isDsex());
@@ -20,15 +25,29 @@ public class DoctorDAO {
             return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
 
     public static Doctor selectByDno(String Dno) {
         Doctor doctor = null;
-        try (Connection connection = DBUtil.getConnection()) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DBUtil.getConnection();
             String sql = "SELECT * FROM Doctor WHERE Dno = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, Dno);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -41,14 +60,28 @@ public class DoctorDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return doctor;
     }
 
     public static boolean update(Doctor doctor) {
-        try (Connection connection = DBUtil.getConnection()) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DBUtil.getConnection();
             String sql = "UPDATE Doctor SET Dname = ?, Dsex = ?, Dage = ?, Dpwd = ? WHERE Dno = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, doctor.getDname());
             preparedStatement.setBoolean(2, doctor.isDsex());
             preparedStatement.setInt(3, doctor.getDage());
@@ -58,28 +91,53 @@ public class DoctorDAO {
             return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
 
     public static boolean deleteByDno(String Dno) {
-        try (Connection connection = DBUtil.getConnection()) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DBUtil.getConnection();
             String sql = "DELETE FROM Doctor WHERE Dno = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, Dno);
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
 
     public static void main(String[] args) {
-        Doctor d = new Doctor("0001","bb",false,80,"555");
+        Doctor d = new Doctor("0001", "bb", false, 80, "555");
         System.out.println(insert(d));
         System.out.println(selectByDno("0001"));
-        d.setDage(66);;
+        d.setDage(66);
         System.out.println(update(d));
         System.out.println(selectByDno("0001"));
         System.out.println(deleteByDno("0001"));

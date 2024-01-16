@@ -3,21 +3,20 @@ package DAO;
 import Entity.DestroyedDrug;
 import Util.DBUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Date;
 
 public class DestroyedDrugDAO {
     public static boolean insertDestroyedDrug(DestroyedDrug destroyedDrug) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         try {
             // 建立连接
-            Connection connection = DBUtil.getConnection();
+            connection = DBUtil.getConnection();
 
             // 创建一个prepareStatement
             String query = "INSERT INTO DestroyedDrug (PDno, PDbatch, PDnum, Sno, SAno, Stime, DAno, Dtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, destroyedDrug.PDno);
             preparedStatement.setDate(2, new java.sql.Date(destroyedDrug.PDbatch.getTime()));
             preparedStatement.setInt(3, destroyedDrug.PDnum);
@@ -33,13 +32,26 @@ public class DestroyedDrugDAO {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public static boolean updateDestroyedDrug(String PDno, Date PDbatch, int PDnum, String Sno, String SAno, Date Stime, String DAno, Date Dtime) {
+        Connection connection = null;
+        Statement statement = null;
         try {
-            Connection connection = DBUtil.getConnection();
-            Statement statement = connection.createStatement();
+            connection = DBUtil.getConnection();
+            statement = connection.createStatement();
             String query = "UPDATE DestroyedDrug SET PDbatch = '" + new java.sql.Date(PDbatch.getTime()) + "', PDnum = " + PDnum + ", Sno = '" + Sno + "', SAno = '" + SAno + "', Stime = '" + new java.sql.Date(Stime.getTime()) + "', DAno = '" + DAno + "', Dtime = '" + new java.sql.Date(Dtime.getTime()) + "' WHERE PDno = '" + PDno + "'";
             int rowsAffected = statement.executeUpdate(query);
             statement.close();
@@ -48,13 +60,26 @@ public class DestroyedDrugDAO {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public static boolean deleteDestroyedDrug(String PDno) {
+        Connection connection = null;
+        Statement statement = null;
         try {
-            Connection connection = DBUtil.getConnection();
-            Statement statement = connection.createStatement();
+            connection = DBUtil.getConnection();
+            statement = connection.createStatement();
             String query = "DELETE FROM DestroyedDrug WHERE PDno = '" + PDno + "'";
             int rowsAffected = statement.executeUpdate(query);
             statement.close();
@@ -63,17 +88,30 @@ public class DestroyedDrugDAO {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public static DestroyedDrug[] getAllDestroyedDrugs() {
         DestroyedDrug[] destroyedDrugs = null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         try {
             // 建立连接
-            Connection connection = DBUtil.getConnection();
+            connection = DBUtil.getConnection();
             String query = "SELECT * FROM DestroyedDrug";
             // 创建一个具有可滚动结果集的prepareStatement
-            PreparedStatement preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
             // 执行查询
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -102,15 +140,21 @@ public class DestroyedDrugDAO {
                     index++;
                 }
             }
-
-            // 关闭连接
-            resultSet.close();
-            preparedStatement.close();
-            connection.close();
-
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+
         return destroyedDrugs;
     }
 

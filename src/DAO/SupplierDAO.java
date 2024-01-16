@@ -60,6 +60,7 @@ public class SupplierDAO {
             return false;
         }
     }
+
     public static Supplier[] selectAllSuppliers() {
         Supplier[] suppliers = null;
         try {
@@ -105,8 +106,8 @@ public class SupplierDAO {
     }
 
     public static void main(String[] args) {
-        Supplier s =new Supplier("0001","huadun","shnaghai","88888");
-        Supplier s2 =new Supplier("0002","hhhh","shnaghai","88888");
+        Supplier s = new Supplier("0001", "huadun", "shnaghai", "88888");
+        Supplier s2 = new Supplier("0002", "hhhh", "shnaghai", "88888");
         System.out.println(SupplierDAO.insertSupplier(s));
         System.out.println(SupplierDAO.insertSupplier(s2));
 
@@ -121,7 +122,7 @@ public class SupplierDAO {
         try {
             // 建立连接
             Connection connection = DBUtil.getConnection();
-            String query = "SELECT * FROM Supplier WHERE Sno LIKE N'%"+text+"%' OR Sname LIKE N'%"+text+"%' OR Saddr LIKE N'%"+text+"%' OR Sphone LIKE N'%"+text+"%'";
+            String query = "SELECT * FROM Supplier WHERE Sno LIKE N'%" + text + "%' OR Sname LIKE N'%" + text + "%' OR Saddr LIKE N'%" + text + "%' OR Sphone LIKE N'%" + text + "%'";
             // 创建一个具有可滚动结果集的prepareStatement
             PreparedStatement preparedStatement = connection.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 

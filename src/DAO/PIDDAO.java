@@ -1,4 +1,5 @@
 package DAO;
+
 import Entity.PID;
 import Util.DBUtil;
 
@@ -28,8 +29,9 @@ public class PIDDAO {
             return false;
         }
     }
+
     //        根据处方编号得到该处方中包含所有的药品的编号和数量
-    public static PID[] getDrugs(int Pno){
+    public static PID[] getDrugs(int Pno) {
         PID[] pidArray = null;
         try {
             // 建立连接
