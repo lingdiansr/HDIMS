@@ -3,28 +3,29 @@ package UI;
 import Entity.Admin;
 import Entity.Nurse;
 import Entity.Doctor;
+import Service.LoginListener;
 import Service.UserService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class LoginUI extends JFrame implements ActionListener {
+public class LoginUI extends JFrame {
 
     // 使用复选框进行身份选择
     JLabel IdentityLable = new JLabel("  身 份:");
-    JCheckBox Identityadmin = new JCheckBox("仓库管理员");
-    JCheckBox Identitynurse = new JCheckBox("护士");
-    JCheckBox Identitydoctor = new JCheckBox("医生");
+    public JCheckBox Identityadmin = new JCheckBox("仓库管理员");
+    public JCheckBox Identitynurse = new JCheckBox("护士");
+    public JCheckBox Identitydoctor = new JCheckBox("医生");
 
     JLabel UsernameLable = new JLabel(" 工 号:");
-    JTextField UsernameField = new JTextField();
+    public JTextField UsernameField = new JTextField();
 
     JLabel PasswordLable = new JLabel(" 密 码:");
-    JPasswordField PasswordField = new JPasswordField();
+    public JPasswordField PasswordField = new JPasswordField();
 
-    JButton SureButton = new JButton("确定");
-    JButton CancelButton = new JButton("取消");
+    public JButton SureButton = new JButton("确定");
+    public JButton CancelButton = new JButton("取消");
 
     JPanel IdentityPannel = new JPanel();
     JPanel UsernamePannel = new JPanel();
@@ -73,11 +74,12 @@ public class LoginUI extends JFrame implements ActionListener {
         this.add(ButtonPannel);
         this.add(new JPanel());
 
-        SureButton.addActionListener(this);
-        CancelButton.addActionListener(this);
-        Identityadmin.addActionListener(this);
-        Identitynurse.addActionListener(this);
-        Identitydoctor.addActionListener(this);
+        LoginListener ll = new LoginListener(this);
+        SureButton.addActionListener(ll);
+        CancelButton.addActionListener(ll);
+        Identityadmin.addActionListener(ll);
+        Identitynurse.addActionListener(ll);
+        Identitydoctor.addActionListener(ll);
         // 设置字体大小
         Font font = new Font("微软雅黑", Font.PLAIN, 40);
         Font font1 = new Font("微软雅黑", Font.PLAIN, 36);
@@ -98,55 +100,6 @@ public class LoginUI extends JFrame implements ActionListener {
         CancelButton.setFont(font);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String id = UsernameField.getText();
-        String password = new String(PasswordField.getPassword());
-
-        if (e.getSource() == SureButton) {
-            if (id.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "请正确输入用户名和密码", "错误", JOptionPane.ERROR_MESSAGE);
-            } else {
-                UserService us = new UserService();
-                Nurse nurse = null;
-                Doctor doctor = null;
-                if (!Identitydoctor.isSelected() && !Identitynurse.isSelected() && !Identityadmin.isSelected()) {
-                    JOptionPane.showMessageDialog(this, "请选择身份", "错误", JOptionPane.ERROR_MESSAGE);
-                } else if (Identitydoctor.isSelected()) {
-                    System.out.println("Selected Option 1");
-                    doctor = new Doctor();
-                    doctor.setDno(id);
-                    doctor.setDpwd(password);
-                    if (us.DoctorRight(doctor)) {
-                        dispose();
-                        new UI.Doctor(id);
-                    }
-                } else if (Identitynurse.isSelected()) {
-                    System.out.println("Selected Option 2");
-                    nurse = new Nurse();
-                    nurse.setNno(id);
-                    nurse.setNpwd(password);
-                    if (us.NurseRight(nurse)) {
-                        dispose();
-                        new UI.Nurse(id);
-                    }
-                } else if (Identityadmin.isSelected()) {
-                    System.out.println("Selected Option 3");
-                    Admin admin = new Admin();
-                    admin.setAno(id);
-                    admin.setApwd(password);
-                    if (us.AdminRight(admin)) {
-                        dispose();
-                        new UI.Warehousekeeper(id);
-                    } else {
-                        JOptionPane.showMessageDialog(this, "工号或密码错误", "错误", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-        } else if (e.getSource() == CancelButton) {
-            System.exit(0);
-        }
-    }
 
     public static void main(String[] s) {
         LoginUI frame = new LoginUI();

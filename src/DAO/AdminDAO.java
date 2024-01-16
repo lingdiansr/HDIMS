@@ -132,6 +132,7 @@ public class AdminDAO {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
+            connection=DBUtil.getConnection();
             String sql = "SELECT * FROM Admin WHERE Ano = ?";
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, Ano);
