@@ -15,8 +15,8 @@ public class AdminDAO {
      * @return 是否成功更新
      */
     public static boolean update(Admin admin) {
-
-        try (Connection connection = DBUtil.getConnection()) {
+        Connection connection=null;
+        try (connection = DBUtil.getConnection()) {
             // 创建 SQL 更新语句
             String sql = "UPDATE Admin SET Aname = ?, Asex = ?, Aage = ?, Apwd = ? WHERE Ano = ?";
 
